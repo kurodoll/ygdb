@@ -135,6 +135,76 @@ router.get('/games/new', requireLogin, function(req, res, next) {
     form: {} });
 });
 
+router.post('/games/new', requireLogin, function(req, res, next) {
+  const form = req.body;
+  let error = '';
+
+  if (!form.title) {
+    error = 'A required field was left blank';
+  }
+
+  if (error) {
+    res.render('games/new', {
+      title: 'Add new game - ' + website_name,
+      error: error,
+      form: form });
+  }
+  else {
+    let query = `
+      INSERT INTO games (
+        title,
+        title_romaji,
+        created,
+        created_by)
+      VALUES ($1, $2, $3, $4)
+      RETURNING *;`;
+
+    let vars = [
+      form.title,
+      form.title_romaji,
+      getTimestamp(),
+      res.locals.user.id ];
+
+    pg_pool.query(query, vars, function(err, result) {
+      if (err) {
+        console.error(err);
+
+        res.render('games/new', {
+          title: 'Add new game - ' + website_name,
+          error: 'Something went wrong. Please try again',
+          form: form });
+      }
+      else {
+        query = `
+          INSERT INTO revisions (
+            game_id,
+            nth_revision,
+            title,
+            title_romaji,
+            created,
+            created_by)
+          VALUES ($1, $2, $3, $4, $5, $6);`;
+
+        vars = [
+          result.rows[0].id,
+          result.rows[0].revisions,
+          form.title,
+          form.title_romaji ? form.title_romaji : null,
+          getTimestamp(),
+          res.locals.user.id ];
+
+        pg_pool.query(query, vars, function(err2, result2) {
+          if (err2) {
+            console.error(err);
+          }
+
+          res.redirect('/games');
+        });
+      }
+    });
+  }
+});
+
 // ---------------------------------------------------------------------- Login
 router.get('/login', function(req, res, next) {
   if (req.session.user) {

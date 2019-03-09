@@ -3,6 +3,9 @@ extends ../layout
 block content
   div.content
     div.content-centered
+      if error
+        p.error= error
+
       form(action='/games/new' method='post')
         table
           tr
@@ -24,7 +27,8 @@ block content
                 name='title_romaji'
                 placeholder='Yume Nikki'
                 value=form.title_romaji
-                maxlength='200' )
+                maxlength='200'
+                autocomplete='off' )
 
           tr
             td
