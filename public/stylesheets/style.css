@@ -13,23 +13,39 @@ div.bg {
   filter: blur(3px);
   animation: 180s bg-scroll infinite linear;
 }
+div.nav {
+  position: absolute;
+  top: 126px;
+  left: 400px;
+}
 div.nav-right {
   position: absolute;
   top: 126px;
   right: 50px;
 }
+div.nav p,
 div.nav-right p {
   color: #808080;
 }
+div.nav p a,
 div.nav-right p a {
   padding: 5px;
   color: #ffc864;
   border: 1px transparent solid;
 }
+div.nav p a {
+  color: #64c8ff;
+}
+div.nav p a:hover,
 div.nav-right p a:hover {
   text-decoration: none;
   background: rgba(255,200,100,0.1);
   border: 1px rgba(255,150,50,0.5) solid;
+  border-bottom: none;
+}
+div.nav p a:hover {
+  background: rgba(100,200,255,0.1);
+  border: 1px rgba(50,150,255,0.5) solid;
   border-bottom: none;
 }
 div.content {
@@ -90,11 +106,23 @@ p.message {
   color: #64ff64;
   background: linear-gradient(90deg, rgba(100,255,100,0.1), transparent);
 }
+label {
+  font-size: 7pt;
+  color: rgba(255,255,255,0.5);
+}
 span.highlight {
   color: #fff;
 }
 a {
   text-decoration: none;
+}
+a.special {
+  color: #64ffc8 !important;
+}
+a.special:hover {
+  background: rgba(100,255,200,0.1) !important;
+  border: 1px rgba(100,255,200,0.5) solid !important;
+  border-bottom: none !important;
 }
 table {
   width: 100%;

@@ -11,6 +11,13 @@ html
     h1 <a href='/'><span class='logo-effect'>野生</span>gdb</a>
     p.logo-sub the wild game database
 
+    div.nav
+      p
+        | <a href='/'>Home</a> |
+        | <a href='/games'>Games</a>
+        if user
+          | &nbsp;| <a class='special' href='/games/new'>Add new game</a>
+
     div.nav-right
       if user
         p

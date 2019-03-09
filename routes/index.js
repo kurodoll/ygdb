@@ -95,7 +95,7 @@ const sessionsMiddleware = function(req, res, next) {
     next();
   }
 };
-/*
+
 function requireLogin(req, res, next) {
   if (req.session.user) {
     next();
@@ -106,7 +106,7 @@ function requireLogin(req, res, next) {
     res.redirect('/login');
   }
 }
-*/
+
 router.use(sessionsConfig);
 router.use(sessionsMiddleware);
 
@@ -122,6 +122,17 @@ function getTimestamp() {
 // *                                                           * // Routing //
 router.get('/', function(req, res, next) {
   res.render('index', { title: website_name });
+});
+
+// ---------------------------------------------------------------------- Games
+router.get('/games', function(req, res, next) {
+  res.render('games', { title: 'Games - ' + website_name });
+});
+
+router.get('/games/new', requireLogin, function(req, res, next) {
+  res.render('games/new', {
+    title: 'Add new game - ' + website_name,
+    form: {} });
 });
 
 // ---------------------------------------------------------------------- Login
