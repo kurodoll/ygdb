@@ -1,0 +1,45 @@
+@import url("https://fonts.googleapis.com/css?family=Graduate");
+body {
+  background: #000;
+}
+div.bg {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: -1;
+  background: url("/images/bg.png") repeat;
+  filter: blur(3px);
+}
+h1 {
+  margin: 0;
+  padding-left: 30px;
+  font: 80px Graduate;
+  color: #fff;
+}
+span.logo-effect {
+  transition: text-shadow 3s;
+  text-shadow: -2px 2px 0px rgba(0,230,230,0.5), -4px 4px 0px rgba(1,204,204,0.5), -6px 6px 0px rgba(0,189,189,0.5);
+}
+span.logo-effect:hover {
+  transition: text-shadow 0.5s;
+  text-shadow: -4px 2px 0px rgba(0,230,230,0.5), -8px 4px 0px rgba(1,204,204,0.5), -12px 6px 0px rgba(0,189,189,0.5), -2px 2px 20px #00e6e6, -4px 4px 40px #01cccc, -6px 6px 60px #00bdbd;
+}
+h1 a {
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-text-fill-color: rgba(255,255,255,0.5);
+  -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-color: #fff;
+}
+p {
+  margin: 0;
+  color: #fff;
+}
+p.logo-sub {
+  position: relative;
+  padding-left: 200px;
+  bottom: 25px;
+  font: 12px Graduate;
+}
