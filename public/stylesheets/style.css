@@ -12,6 +12,25 @@ div.bg {
   background: url("/images/bg.png") repeat;
   filter: blur(3px);
 }
+div.nav-right {
+  position: absolute;
+  top: 126px;
+  right: 50px;
+}
+div.nav-right p {
+  color: #808080;
+}
+div.nav-right p a {
+  padding: 5px;
+  color: #ffc864;
+  border: 1px transparent solid;
+}
+div.nav-right p a:hover {
+  text-decoration: none;
+  background: rgba(255,200,100,0.1);
+  border: 1px rgba(255,150,50,0.5) solid;
+  border-bottom: none;
+}
 div.content {
   box-sizing: border-box;
   padding: 5px;
@@ -36,7 +55,6 @@ span.logo-effect:hover {
 }
 h1 a {
   text-decoration: none;
-  cursor: pointer;
   -webkit-text-fill-color: rgba(255,255,255,0.5);
   -webkit-text-stroke-width: 2px;
   -webkit-text-stroke-color: #fff;
@@ -51,4 +69,7 @@ p.logo-sub {
   padding-left: 200px;
   bottom: 25px;
   font: 9pt Graduate;
+}
+a {
+  text-decoration: none;
 }
