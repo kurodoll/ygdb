@@ -77,6 +77,11 @@ p.logo-sub {
   bottom: 25px;
   font: 9pt Graduate;
 }
+p.error {
+  padding: 5px;
+  color: #ff6464;
+  background: rgba(255,100,100,0.1);
+}
 a {
   text-decoration: none;
 }

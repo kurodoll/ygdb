@@ -6,6 +6,9 @@
     "rules": {
         "object-curly-spacing": "off",
         "new-cap": "off",
-        "camelcase": "off"
+        "camelcase": "off",
+        "brace-style": "off",
+        "require-jsdoc": "off",
+        "array-bracket-spacing": "off"
     }
 }

@@ -3,6 +3,9 @@ extends ../layout
 block content
   div.content
     div.content-centered
+      if error
+        p.error= error
+
       form(action='/register' method='post')
         table
           tr
