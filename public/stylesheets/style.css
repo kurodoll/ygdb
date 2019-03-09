@@ -11,6 +11,7 @@ div.bg {
   z-index: -1;
   background: url("/images/bg.png") repeat;
   filter: blur(3px);
+  animation: 180s bg-scroll infinite linear;
 }
 div.nav-right {
   position: absolute;
@@ -122,4 +123,24 @@ input[type='submit'] {
 input[type='submit']:hover {
   cursor: pointer;
   border: 1px rgba(192,128,255,0.8) solid;
+}
+@-moz-keyframes bg-scroll {
+  100% {
+    background-position: -3000px 0;
+  }
+}
+@-webkit-keyframes bg-scroll {
+  100% {
+    background-position: -3000px 0;
+  }
+}
+@-o-keyframes bg-scroll {
+  100% {
+    background-position: -3000px 0;
+  }
+}
+@keyframes bg-scroll {
+  100% {
+    background-position: -3000px 0;
+  }
 }

@@ -16,6 +16,12 @@ div.bg
   background url('/images/bg.png') repeat
   filter blur(3px)
 
+  animation 180s bg-scroll infinite linear
+
+@keyframes bg-scroll
+  100%
+    background-position -3000px 0
+
 div.nav-right
   position absolute
   top 126px
