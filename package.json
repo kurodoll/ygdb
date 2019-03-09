@@ -8,9 +8,11 @@
   "dependencies": {
     "acorn": "^6.1.1",
     "bcrypt": "^3.0.4",
+    "client-sessions": "^0.8.0",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
     "express": "~4.16.0",
+    "generate-key": "0.0.6",
     "http-errors": "~1.6.2",
     "morgan": "~1.9.0",
     "pg": "^7.8.2",

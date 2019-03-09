@@ -6,7 +6,7 @@ body
   background black
 
 div.bg
-  position absolute
+  position fixed
   top 0
   bottom 0
   left 0
@@ -100,11 +100,19 @@ p.logo-sub
 
   font 9pt Graduate
 
-p.error
+p.error, p.message
   padding 5px
 
+p.error
   color rgb(255,100,100)
-  background rgba(255,100,100,.1)
+  background linear-gradient(90deg, rgba(255,100,100,.1), transparent)
+
+p.message
+  color rgb(100,255,100)
+  background linear-gradient(90deg, rgba(100,255,100,.1), transparent)
+
+span.highlight
+  color white
 
 a
   text-decoration none

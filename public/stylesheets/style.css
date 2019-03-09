@@ -3,7 +3,7 @@ body {
   background: #000;
 }
 div.bg {
-  position: absolute;
+  position: fixed;
   top: 0;
   bottom: 0;
   left: 0;
@@ -77,10 +77,20 @@ p.logo-sub {
   bottom: 25px;
   font: 9pt Graduate;
 }
-p.error {
+p.error,
+p.message {
   padding: 5px;
+}
+p.error {
   color: #ff6464;
-  background: rgba(255,100,100,0.1);
+  background: linear-gradient(90deg, rgba(255,100,100,0.1), transparent);
+}
+p.message {
+  color: #64ff64;
+  background: linear-gradient(90deg, rgba(100,255,100,0.1), transparent);
+}
+span.highlight {
+  color: #fff;
 }
 a {
   text-decoration: none;

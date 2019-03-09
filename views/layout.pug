@@ -12,8 +12,13 @@ html
     p.logo-sub the wild game database
 
     div.nav-right
-      p
-        | <a href='/login'>Login</a> |
-        | <a href='/register'>Register</a>
+      if user
+        p
+          | Logged in as <span class='highlight'>#{user.username}</span>
+          | <a href='/logout'>(Logout)</a>
+      else
+        p
+          | <a href='/login'>Login</a> |
+          | <a href='/register'>Register</a>
 
     block content

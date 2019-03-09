@@ -57,6 +57,61 @@ pg_pool.on('error', function(err, client) {
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// *                                                      * // User Session //
+const sessions = require('client-sessions');
+const keygen = require('generate-key');
+
+const one_week = 1000 * 60 * 60 * 24 * 7;
+
+const sessionsConfig = sessions({
+  cookieName: 'session',
+  secret: keygen.generateKey(60),
+  duration: one_week,
+  activeDuration: one_week,
+  httpOnly: true, // Prevents clients from using JavaScript to access cookies
+  secure: true }); // Ensures that cookies are only sent over HTTPS
+
+// res.session.user is the logged in user's username.
+// res.locals contains the user's full details
+const sessionsMiddleware = function(req, res, next) {
+  if (req.session && req.session.user) {
+    const query = 'SELECT * FROM users WHERE username = $1;';
+    const vars = [ req.session.user ];
+
+    pg_pool.query(query, vars, function(err, result) {
+      if (err) {
+        console.error(err);
+      }
+      else if (result.rows.length) {
+        res.locals.user = result.rows[0];
+        delete res.locals.user.password;
+        req.user = res.locals.user;
+      }
+
+      next();
+    });
+  }
+  else {
+    next();
+  }
+};
+/*
+function requireLogin(req, res, next) {
+  if (req.session.user) {
+    next();
+  }
+  else {
+    // Remember where user was trying to go
+    req.session.return_to = req.originalUrl;
+    res.redirect('/login');
+  }
+}
+*/
+router.use(sessionsConfig);
+router.use(sessionsMiddleware);
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 // *                                                 * // General Functions //
 function getTimestamp() {
   return new Date(new Date().getTime()).toISOString();
@@ -69,11 +124,77 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: website_name });
 });
 
+// ---------------------------------------------------------------------- Login
+router.get('/login', function(req, res, next) {
+  if (req.session.user) {
+    res.redirect('/');
+  }
+  else {
+    res.render('user/login', {
+      title: 'Login - ' + website_name,
+      form: {} });
+  }
+});
+
+router.post('/login', function(req, res, next) {
+  const form = req.body;
+  let error = '';
+
+  if (!form.username || !form.password) {
+    error = 'A required field was left blank';
+  }
+  else if (form.username.length > 20 || form.password.length > 1000) {
+    error = 'Bypassing the character limit is bad!';
+  }
+  else {
+    const query = 'SELECT * FROM users WHERE username = $1;';
+    const vars = [ form.username ];
+
+    pg_pool.query(query, vars, function(err, result) {
+      if (err) {
+        console.error(err);
+        error = 'Something went wrong. Please try again';
+      }
+      else if (result.rows.length <= 0) {
+        error = 'Invalid credentials';
+      }
+      else {
+        if (bcrypt.compareSync(form.password, result.rows[0].password)) {
+          req.session.user = form.username;
+          res.redirect(req.session.return_to ? req.session.return_to : '/');
+        }
+        else {
+          error = 'Invalid credentials';
+        }
+      }
+
+      if (error) {
+        res.render('user/login', {
+          title: 'Login - ' + website_name,
+          error: error,
+          form: form });
+      }
+    });
+  }
+
+  if (error) {
+    res.render('user/login', {
+      title: 'Login - ' + website_name,
+      error: error,
+      form: form });
+  }
+});
+
 // ------------------------------------------------------------------- Register
 router.get('/register', function(req, res, next) {
-  res.render('user/register', {
-    title: 'Register - ' + website_name,
-    form: {} });
+  if (req.session.user) {
+    res.redirect('/');
+  }
+  else {
+    res.render('user/register', {
+      title: 'Register - ' + website_name,
+      form: {} });
+  }
 });
 
 router.post('/register', function(req, res, next) {
@@ -168,5 +289,11 @@ function registerUser(user, res) {
     }
   });
 }
+
+// --------------------------------------------------------------------- Logout
+router.get('/logout', function(req, res, next) {
+  req.session.reset();
+  res.redirect('/');
+});
 
 module.exports = router;
