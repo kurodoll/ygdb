@@ -40,19 +40,17 @@ div.nav p a:hover,
 div.nav-right p a:hover {
   text-decoration: none;
   background: rgba(255,200,100,0.1);
-  border: 1px rgba(255,150,50,0.5) solid;
-  border-bottom: none;
+  border-bottom: 1px #ffc864 solid;
 }
 div.nav p a:hover {
   background: rgba(100,200,255,0.1);
-  border: 1px rgba(50,150,255,0.5) solid;
-  border-bottom: none;
+  border-bottom: 1px #64c8ff solid;
 }
 div.content {
   box-sizing: border-box;
   padding: 5px;
   background: linear-gradient(90deg, rgba(16,32,64,0.8), rgba(16,32,64,0.2));
-  border: 1px rgba(64,128,255,0.5) solid;
+  border: 1px rgba(100,200,255,0.3) solid;
   box-shadow: 0 20px 25px 5px rgba(0,0,0,0.2);
   box-shadow: 0 10px 25px 5px rgba(0,0,0,0.4);
 }
@@ -120,8 +118,7 @@ a.special {
 }
 a.special:hover {
   background: rgba(100,255,200,0.1) !important;
-  border: 1px rgba(100,255,200,0.5) solid !important;
-  border-bottom: none !important;
+  border-bottom: 1px #64ffc8 solid !important;
 }
 .subdued {
   color: rgba(255,255,255,0.5);
