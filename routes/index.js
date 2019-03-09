@@ -13,4 +13,10 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: website_name });
 });
 
+router.get('/register', function(req, res, next) {
+  res.render('user/register', {
+    title: 'Register - ' + website_name,
+    form: {} });
+});
+
 module.exports = router;

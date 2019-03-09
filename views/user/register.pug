@@ -1,0 +1,30 @@
+extends ../layout
+
+block content
+  div.content
+    div.content-centered
+      form(action='/register' method='post')
+        table
+          tr
+            td
+              label(for='username') Username
+              input#username(
+                type='text'
+                name='username'
+                value=form.username
+                maxlength='20'
+                autocomplete='off' )
+
+          tr
+            td
+              label(for='password') Password
+              input#password(
+                type='password'
+                name='password'
+                value=form.password
+                maxlength='1000' )
+
+          tr
+            td
+              center
+                input(type='submit' value='Register')
