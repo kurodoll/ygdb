@@ -195,7 +195,7 @@ router.post('/games/new', requireLogin, function(req, res, next) {
 
         pg_pool.query(query, vars, function(err2, result2) {
           if (err2) {
-            console.error(err);
+            console.error(err2);
           }
 
           res.redirect('/games');
