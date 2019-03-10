@@ -91,6 +91,12 @@ div.game-info
   padding 10px
   background rgba(0,0,0,.3)
 
+div.dark
+  padding-bottom 2px
+  padding-left 10px
+
+  background rgba(0,0,0,.3)
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 // *                                                              * // Text //
@@ -235,7 +241,7 @@ td.layout-small2
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 // *                                                             * // Forms //
-input[type='text'], input[type='password'], input[type='submit'], textarea
+input[type='text'], input[type='password'], input[type='number'], input[type='submit'], textarea
   padding 3px
   width 100%
 
@@ -245,12 +251,12 @@ input[type='text'], input[type='password'], input[type='submit'], textarea
   font 8pt Verdana
   color white
 
-input[type='text']:hover, input[type='password']:hover, input[type='submit']:hover, textarea:hover
+input[type='text']:hover, input[type='password']:hover, input[type='number']:hover, input[type='submit']:hover, textarea:hover
   background linear-gradient(rgba(0,0,0,.2), rgba(192,128,255,.1))
   border-bottom 1px rgba(192,128,255,.8) solid
 
-textarea
-  height 100px
+input[type='number']
+  width 50px
 
 input[type='submit']
   margin-top 5px
@@ -261,6 +267,9 @@ input[type='submit']
 input[type='submit']:hover
   cursor pointer
   border 1px rgba(192,128,255,.8) solid
+
+textarea
+  height 100px
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

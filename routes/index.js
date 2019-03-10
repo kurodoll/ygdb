@@ -57,6 +57,37 @@ pg_pool.on('error', function(err, client) {
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// *                                                * // SQL Functions Init //
+
+// Returns the Bayesian average of a game's ratings.
+// minimum_votes and global_average are fine as 1 and 5.5 for small pop.
+// Formula is: WR = (v * R + m * C) / (v + m)
+
+query = `
+  CREATE OR REPLACE FUNCTION getBayesianRating(
+    n_votes        integer,
+    rating_average real,
+    minimum_votes  integer,
+    global_average real )
+  RETURNS real AS $$
+    DECLARE
+    BEGIN
+      RETURN ROUND(
+        (
+          (n_votes * rating_average + minimum_votes * global_average) /
+          (n_votes + minimum_votes)
+        )::numeric, 2);
+    END;
+  $$ LANGUAGE 'plpgsql';`;
+
+pg_pool.query(query, function(err, result) {
+  if (err) {
+    console.error(err);
+  }
+});
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 // *                                                      * // User Session //
 const sessions = require('client-sessions');
 const keygen = require('generate-key');
@@ -251,12 +282,39 @@ router.get('/games/:id', function(req, res, next) {
         'version', version,
         'release_date', release_date)
           FROM releases WHERE game_id = $1)
-            AS releases
+            AS releases,
+
+      array(SELECT rating FROM ratings WHERE game_id = $1 AND active = TRUE)
+        AS ratings,
+
+      (SELECT getBayesianRating(
+        COUNT(ratings.rating)::integer,
+        AVG(ratings.rating)::real,
+        1::integer,
+        5.5::real )
+          FROM ratings WHERE games.id = ratings.game_id AND active = TRUE)
+            AS rating_bayesian,
+
+      (SELECT ROUND(AVG(rating)::numeric, 2)
+        FROM ratings WHERE game_id = $1 AND active = TRUE)
+          AS rating_average,
+
+      (SELECT rating FROM ratings WHERE
+        game_id = $1 AND
+        user_id = $2 AND
+        active = TRUE)
+          AS user_rating
 
     FROM games WHERE id = $1;`;
 
+  let user_id = 0;
+  if (res.locals.user) {
+    user_id = res.locals.user.id;
+  }
 
-  const vars = [ req.params.id ];
+  const vars = [
+    req.params.id,
+    user_id ];
 
   pg_pool.query(query, vars, function(err, result) {
     if (err) {
@@ -408,6 +466,63 @@ router.post('/games/edit/:id', requireLogin, function(req, res, next) {
       }
     });
   }
+});
+
+// --------------------------------------------------------------------- Rating
+router.post('/games/rate', requireLogin, function(req, res, next) {
+  const form = req.body;
+
+  // Ensure that the given rating has only one decimal place
+  const rating = Math.round(form.user_rating * 10) / 10;
+
+  // Ensure that the given rating is within bounds
+  if (rating < 1 || rating > 10) {
+    res.send('failure');
+    return;
+  }
+
+  let query = `
+    UPDATE ratings
+    SET active = FALSE
+    WHERE
+      game_id = $1 AND
+      user_id = $2;`;
+
+  let vars = [
+    form.game_id,
+    res.locals.user.id ];
+
+  pg_pool.query(query, vars, function(err, result) {
+    if (err) {
+      console.error(err);
+      res.send('failure');
+    }
+    else {
+      query = `
+        INSERT INTO ratings (
+          game_id,
+          user_id,
+          rating,
+          created )
+        VALUES ($1, $2, $3, $4);`;
+
+      vars = [
+        form.game_id,
+        res.locals.user.id,
+        rating,
+        getTimestamp() ];
+
+      pg_pool.query(query, vars, function(err2, result2) {
+        if (err2) {
+          console.error(err2);
+          res.send('failure');
+        }
+        else {
+          res.send('success');
+        }
+      });
+    }
+  });
 });
 
 // ------------------------------------------------------------------- Releases

@@ -39,7 +39,13 @@ block content
       'rgb(212,163,253)' ];
 
     function renderRatingsChart() {
+      const get_ratings = [!{game.ratings}];
       let ratings = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+      // Convert the list of ratings into an array of frequencies
+      for (let i = 0; i < get_ratings.length; i++) {
+        ratings[Math.round(get_ratings[i]) - 1]++;
+      }
 
       Chart.defaults.global.defaultFontFamily = 'Verdana';
       Chart.defaults.global.defaultFontSize = 9;
@@ -75,6 +81,41 @@ block content
 
     $(document).ready(function() {
       renderRatingsChart();
+
+      // Set the text colour of all rating values to a rainbow colour
+      $('.rating').each(function(i, obj) {
+        $(this).css('color', rainbow_full[Math.round($(this).text()) - 1]);
+      });
+
+      $('#user-rating').css('color', rainbow_full[Math.round($('#user-rating').val()) - 1]);
+      $('#user-rating').on('input', function() {
+        $('#user-rating').css('color', rainbow_full[Math.round($('#user-rating').val()) - 1]);
+      });
+
+      $('#rating-form').submit(function(e) {
+        // Prevent the page from trying to change
+        e.preventDefault();
+        e.stopImmediatePropagation();
+
+        // Temporarily disable the submit button
+        $('#rating-submit').prop('disabled', true);
+
+        $.ajax({
+          type: 'POST',
+          url: '/games/rate',
+          data: $('#rating-form').serialize(),
+          success: function(res) {
+            if (res == 'success') {
+              $('#rating-saved').show();
+              $('#rating-saved').fadeOut(3000);
+            }
+
+            $('#rating-submit').prop('disabled', false);
+          }
+        });
+
+        return false; // Not sure if this is actually needed
+      });
     });
 
 
@@ -164,4 +205,35 @@ block content
 
             td.layout-small2
               div.content
+                if user
+                  div.dark
+                    form#rating-form
+                      input(type='hidden' name='game_id' value=game.id)
+
+                      p Your rating: &nbsp;
+                        | <input id='user-rating' type='number' name='user_rating' min='1' max='10' step='.1' value=!{game.user_rating}>
+                        | <span class='subdued'>/10</span> &nbsp;
+                        | <input id='rating-submit' type='submit' value='Save'> &nbsp;
+                        | <span id='rating-saved' style='display:none;'>Saved!</span>
+
+                if game.ratings.length
+                  table.list
+                    tr
+                      td.half
+                        p.subdued Score/Bayesian rating
+                      td
+                        p.rating= game.rating_bayesian
+
+                    tr
+                      td.half
+                        p.subdued Average rating
+                      td
+                        p.rating= game.rating_average
+
+                    tr
+                      td.half
+                        p.subdued Number of ratings
+                      td
+                        p= game.ratings.length
+
                 canvas#ratings-chart
