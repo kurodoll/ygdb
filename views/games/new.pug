@@ -6,7 +6,7 @@ block content
       if error
         p.error= error
 
-      form(action='/games/new' method='post')
+      mixin form
         table
           tr
             td
@@ -33,4 +33,24 @@ block content
           tr
             td
               center
-                input(type='submit' value='Add Game')
+                if form.id
+                  hr
+
+                  label(for='revision_message') Revision Message
+                  textarea#revision_message(name='revision_message' maxlength=200)
+
+                  input(type='submit' value='Save Changes')
+
+                else
+                  input(type='submit' value='Add Game')
+
+      if form.id
+        p.message Editing #{form.title}
+
+        form(action='/games/edit/'+form.id.toString() method='post')
+          input(type='hidden' name='id' value=form.id)
+          +form
+
+      else
+        form(action='/games/new' method='post')
+          +form

@@ -151,7 +151,7 @@ span.highlight
 
 a
   text-decoration none
-  color rgb(255,200,100)
+  color rgb(100,200,255)
 
 a:hover
   border-bottom 1px rgba(255,255,255,.5) solid
@@ -184,7 +184,7 @@ tr.header td p
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 // *                                                             * // Forms //
-input[type='text'], input[type='password'], input[type='submit']
+input[type='text'], input[type='password'], input[type='submit'], textarea
   padding 3px
   width 100%
 
@@ -194,7 +194,7 @@ input[type='text'], input[type='password'], input[type='submit']
   font 8pt Verdana
   color white
 
-input[type='text']:hover, input[type='password']:hover, input[type='submit']:hover
+input[type='text']:hover, input[type='password']:hover, input[type='submit']:hover, textarea:hover
   background linear-gradient(rgba(0,0,0,.2), rgba(192,128,255,.1))
   border-bottom 1px rgba(192,128,255,.8) solid
 
@@ -207,3 +207,10 @@ input[type='submit']
 input[type='submit']:hover
   cursor pointer
   border 1px rgba(192,128,255,.8) solid
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// *                                                             * // Other //
+hr
+  border none
+  border-bottom 1px rgba(192,128,255,.5) dashed

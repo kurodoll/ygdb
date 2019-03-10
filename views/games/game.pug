@@ -8,4 +8,6 @@ block content
         if game.title_romaji
           | &nbsp;<span class='subdued'>(#{game.title_romaji})</span>
 
-  p.subdued Entry created #{game.created}
+  p.subdued
+    | Entry created #{game.created} |
+    | <a href='/games/edit/#{game.id}'>Edit this page</a>

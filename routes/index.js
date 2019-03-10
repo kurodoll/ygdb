@@ -206,6 +206,7 @@ router.post('/games/new', requireLogin, function(req, res, next) {
             nth_revision,
             title,
             title_romaji,
+            message,
             created,
             created_by)
           VALUES ($1, $2, $3, $4, $5, $6);`;
@@ -215,6 +216,7 @@ router.post('/games/new', requireLogin, function(req, res, next) {
           result.rows[0].revisions,
           form.title,
           form.title_romaji ? form.title_romaji : null,
+          '(System) New entry',
           getTimestamp(),
           res.locals.user.id ];
 
@@ -229,6 +231,118 @@ router.post('/games/new', requireLogin, function(req, res, next) {
     });
   }
 });
+
+// ------------------------------------------------------------------ Edit Game
+router.get('/games/edit/:id', requireLogin, function(req, res, next) {
+  const query = 'SELECT * FROM games WHERE id = $1;';
+  const vars = [ req.params.id ];
+
+  pg_pool.query(query, vars, function(err, result) {
+    if (err) {
+      console.error(err);
+    }
+
+    res.render('games/new', {
+      title: 'Editing ' + result.rows[0].title + ' - ' + website_name,
+      form: result.rows[0] });
+  });
+});
+
+router.post('/games/edit/:id', requireLogin, function(req, res, next) {
+  const form = req.body;
+  let error = '';
+
+  if (!form.title) {
+    error = 'A required field was left blank';
+  }
+  else if (!form.revision_message) {
+    error = 'A revision message is required';
+  }
+
+  if (error) {
+    res.render('games/new', {
+      title: 'Editing ' + form.title + ' - ' + website_name,
+      error: error,
+      form: form });
+  }
+  else {
+    const query = 'SELECT * FROM games WHERE id = $1;';
+    const vars = [ req.params.id ];
+
+    pg_pool.query(query, vars, function(err, result) {
+      if (err) {
+        console.error(err);
+
+        res.render('games/new', {
+          title: 'Editing ' + result.rows[0].title + ' - ' + website_name,
+          error: 'Something went wrong. Please try again',
+          form: form });
+      }
+      else {
+        let query = `
+          UPDATE games
+          SET
+            title = $2,
+            title_romaji = $3,
+            revisions = dummy.revisions + 1
+          FROM (SELECT * FROM games WHERE id = $1 FOR UPDATE) dummy
+          WHERE games.id = dummy.id
+          RETURNING dummy.*;`;
+
+        let vars = [
+          req.params.id,
+          form.title,
+          form.title_romaji ];
+
+        pg_pool.query(query, vars, function(err2, result2) {
+          if (err2) {
+            console.error(err2);
+
+            res.render('games/new', {
+              title: 'Editing ' + result.rows[0].title + ' - ' + website_name,
+              error: 'Something went wrong. Please try again',
+              form: form });
+          }
+          else {
+            query = `
+              INSERT INTO revisions (
+                game_id,
+                nth_revision,
+                title,
+                title_romaji,
+                message,
+                created,
+                created_by)
+              VALUES ($1, $2, $3, $4, $5, $6);`;
+
+            vars = [
+              req.params.id,
+              result.rows[0].revisions + 1,
+
+              form.title == result.rows[0].title ?
+                null : form.title,
+
+              form.title_romaji == result.rows[0].title_romaji ?
+                null : form.title_romaji,
+
+              form.revision_message,
+              getTimestamp(),
+              res.locals.user.id ];
+
+            pg_pool.query(query, vars, function(err2, result2) {
+              if (err2) {
+                console.error(err2);
+              }
+
+              res.redirect('/games/' + req.params.id.toString());
+            });
+          }
+        });
+      }
+    });
+  }
+});
+
 
 // ---------------------------------------------------------------------- Login
 router.get('/login', function(req, res, next) {

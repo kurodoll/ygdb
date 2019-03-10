@@ -125,7 +125,7 @@ span.highlight {
 }
 a {
   text-decoration: none;
-  color: #ffc864;
+  color: #64c8ff;
 }
 a:hover {
   border-bottom: 1px rgba(255,255,255,0.5) solid;
@@ -155,7 +155,8 @@ tr.header td p {
 }
 input[type='text'],
 input[type='password'],
-input[type='submit'] {
+input[type='submit'],
+textarea {
   padding: 3px;
   width: 100%;
   background: rgba(0,0,0,0.2);
@@ -165,7 +166,8 @@ input[type='submit'] {
 }
 input[type='text']:hover,
 input[type='password']:hover,
-input[type='submit']:hover {
+input[type='submit']:hover,
+textarea:hover {
   background: linear-gradient(rgba(0,0,0,0.2), rgba(192,128,255,0.1));
   border-bottom: 1px rgba(192,128,255,0.8) solid;
 }
@@ -177,6 +179,10 @@ input[type='submit'] {
 input[type='submit']:hover {
   cursor: pointer;
   border: 1px rgba(192,128,255,0.8) solid;
+}
+hr {
+  border: none;
+  border-bottom: 1px rgba(192,128,255,0.5) dashed;
 }
 @-moz-keyframes bg-scroll {
   100% {
