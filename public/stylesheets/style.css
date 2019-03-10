@@ -110,18 +110,6 @@ p.logo-sub {
   bottom: 25px;
   font: 9pt Graduate;
 }
-p.error,
-p.message {
-  padding: 5px;
-}
-p.error {
-  color: #ff6464;
-  background: linear-gradient(90deg, rgba(255,100,100,0.1), transparent);
-}
-p.message {
-  color: #64ff64;
-  background: linear-gradient(90deg, rgba(100,255,100,0.1), transparent);
-}
 pre {
   white-space: pre-wrap;
   word-wrap: break-all;
@@ -148,6 +136,18 @@ a.special:hover {
 }
 .subdued {
   color: rgba(255,255,255,0.5);
+}
+.error,
+.message {
+  padding: 5px;
+}
+.error {
+  color: #ff6464;
+  background: linear-gradient(90deg, rgba(255,100,100,0.1), transparent);
+}
+.message {
+  color: #64ff64;
+  background: linear-gradient(90deg, rgba(100,255,100,0.1), transparent);
 }
 table {
   width: 100%;
