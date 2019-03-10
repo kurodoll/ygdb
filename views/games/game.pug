@@ -32,6 +32,7 @@ block content
     table.list
       tr.header
         td <p>Region</p>
+        td <p>Type</p>
         td <p>Title</p>
         td <p>Version</p>
         td <p>Release Date</p>
@@ -40,6 +41,7 @@ block content
       each r in game.releases
         tr
           td <p>#{r.region}</p>
+          td <p>#{r.type}</p>
 
           td
             p

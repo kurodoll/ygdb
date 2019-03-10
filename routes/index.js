@@ -236,6 +236,7 @@ router.get('/games/:id', function(req, res, next) {
       array(SELECT json_build_object(
         'id', id,
         'region', region,
+        'type', type,
         'title', title,
         'title_romaji', title_romaji,
         'version', version,
@@ -433,18 +434,20 @@ router.post('/releases/new/:game_id', requireLogin, function(req, res, next) {
         INSERT INTO releases (
           game_id,
           region,
+          type,
           title,
           title_romaji,
           version,
           release_date,
           created,
           created_by)
-        VALUES ($1, $2, $3, $4, $5, $6, $7)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
         RETURNING *;`;
 
       vars = [
         result.rows[0].id,
         form.region,
+        form.type,
         form.title,
         form.title_romaji ? form.title_romaji : null,
         form.version,
@@ -468,6 +471,7 @@ router.post('/releases/new/:game_id', requireLogin, function(req, res, next) {
               release_id,
               nth_revision,
               region,
+              type,
               title,
               title_romaji,
               version,
@@ -475,12 +479,13 @@ router.post('/releases/new/:game_id', requireLogin, function(req, res, next) {
               message,
               created,
               created_by)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);`;
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);`;
 
           vars = [
             result.rows[0].id,
             result.rows[0].revisions,
             form.region,
+            form.type,
             form.title,
             form.title_romaji ? form.title_romaji : null,
             form.version,
@@ -583,10 +588,11 @@ router.post('/releases/edit/:id', requireLogin, function(req, res, next) {
           UPDATE releases
           SET
             region = $2,
-            title = $3,
-            title_romaji = $4,
-            version = $5,
-            release_date = $6,
+            type = $3,
+            title = $4,
+            title_romaji = $5,
+            version = $6,
+            release_date = $7,
             revisions = dummy.revisions + 1
           FROM (SELECT * FROM releases WHERE id = $1 FOR UPDATE) dummy
           WHERE releases.id = dummy.id
@@ -595,6 +601,7 @@ router.post('/releases/edit/:id', requireLogin, function(req, res, next) {
         vars = [
           req.params.id,
           form.region,
+          form.type,
           form.title,
           form.title_romaji,
           form.version,
@@ -625,6 +632,7 @@ router.post('/releases/edit/:id', requireLogin, function(req, res, next) {
                 release_id,
                 nth_revision,
                 region,
+                type,
                 title,
                 title_romaji,
                 version,
@@ -632,7 +640,7 @@ router.post('/releases/edit/:id', requireLogin, function(req, res, next) {
                 message,
                 created,
                 created_by)
-              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);`;
+              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);`;
 
             vars = [
               req.params.id,
@@ -640,6 +648,9 @@ router.post('/releases/edit/:id', requireLogin, function(req, res, next) {
 
               form.region == result.rows[0].region ?
                 null : form.region,
+
+               form.type == result.rows[0].type ?
+                null : form.type,
 
               form.title == result.rows[0].title ?
                 null : form.title,

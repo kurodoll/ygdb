@@ -23,6 +23,16 @@ block content
 
           tr
             td
+              label(for='type') Type <span class='subdued'>(e.g. Fan Translation)</span>
+              input#type(
+                type='text'
+                name='type'
+                value=form.type
+                maxlength='50'
+                autocomplete='off' )
+
+          tr
+            td
               label(for='title') Title <span class='subdued'>(language of release)</span>
               input#title(
                 type='text'
