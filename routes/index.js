@@ -6,7 +6,7 @@ const bcrypt = require('bcrypt');
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 // *                                                          * // App Init //
-const website_name = '野生GameDB';
+const website_name = 'Yasei';
 
 try {
   config = require('../config');
@@ -352,7 +352,6 @@ router.post('/games/edit/:id', requireLogin, function(req, res, next) {
     });
   }
 });
-
 
 // ---------------------------------------------------------------------- Login
 router.get('/login', function(req, res, next) {
