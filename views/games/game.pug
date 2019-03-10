@@ -5,9 +5,10 @@ block content
     tr
       td.layout-small
         div.content
-          for ss in game.screenshots.split('\n')
-            a.img(href=ss)
-              img(src=ss)
+          if game.screenshots
+            for ss in game.screenshots.split('\n')
+              a.img(href=ss)
+                img(src=ss)
 
       td.layout-large
         div.content
@@ -31,8 +32,9 @@ block content
                   tr
                     td <p>Links</p>
                     td
-                      each l in game.links.split('\n')
-                        p <a class='special2' href="#{l.split('::')[0]}">#{l.split('::')[1]}</a>
+                      if game.links
+                        each l in game.links.split('\n')
+                          p <a class='special2' href="#{l.split('::')[0]}">#{l.split('::')[1]}</a>
 
         p.subdued.right
           | Entry created #{game.created} |
