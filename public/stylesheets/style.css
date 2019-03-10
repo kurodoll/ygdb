@@ -196,6 +196,9 @@ textarea:hover {
   background: linear-gradient(rgba(0,0,0,0.2), rgba(192,128,255,0.1));
   border-bottom: 1px rgba(192,128,255,0.8) solid;
 }
+textarea {
+  height: 100px;
+}
 input[type='submit'] {
   margin-top: 5px;
   width: 100px;
