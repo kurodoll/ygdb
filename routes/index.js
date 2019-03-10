@@ -222,7 +222,22 @@ router.post('/games/new', requireLogin, function(req, res, next) {
 });
 
 router.get('/games/:id', function(req, res, next) {
-  const query = 'SELECT * FROM games WHERE id = $1;';
+  const query = `
+    SELECT
+      *,
+
+      array(SELECT json_build_object(
+        'id', id,
+        'region', region,
+        'title', title,
+        'title_romaji', title_romaji,
+        'version', version)
+          FROM releases WHERE game_id = $1)
+            AS releases
+
+    FROM games WHERE id = $1;`;
+
+
   const vars = [ req.params.id ];
 
   pg_pool.query(query, vars, function(err, result) {
@@ -351,6 +366,116 @@ router.post('/games/edit/:id', requireLogin, function(req, res, next) {
       }
     });
   }
+});
+
+// ------------------------------------------------------------------- Releases
+router.get('/releases/new/:game_id', requireLogin, function(req, res, next) {
+  const query = 'SELECT * FROM games WHERE id = $1;';
+  const vars = [ req.params.game_id ];
+
+  pg_pool.query(query, vars, function(err, result) {
+    if (err) {
+      console.error(err);
+    }
+
+    res.render('releases/new', {
+      title: 'Add new release - ' + website_name,
+      game: result.rows[0],
+      form: {} });
+  });
+});
+
+router.post('/releases/new/:game_id', requireLogin, function(req, res, next) {
+  const query = 'SELECT * FROM games WHERE id = $1;';
+  const vars = [ req.params.game_id ];
+
+  pg_pool.query(query, vars, function(err, result) {
+    if (err) {
+      console.error(err);
+    }
+
+    const form = req.body;
+    let error = '';
+
+    if (!form.region || !form.title || !form.version) {
+      error = 'A required field was left blank';
+    }
+
+    if (error) {
+      res.render('releases/new', {
+        title: 'Add new release - ' + website_name,
+        error: error,
+        game: result.rows[0],
+        form: form });
+    }
+    else {
+      let query = `
+        INSERT INTO releases (
+          game_id,
+          region,
+          title,
+          title_romaji,
+          version,
+          created,
+          created_by)
+        VALUES ($1, $2, $3, $4, $5, $6)
+        RETURNING *;`;
+
+      let vars = [
+        result.rows[0].id,
+        form.region,
+        form.title,
+        form.title_romaji ? form.title_romaji : null,
+        form.version,
+        getTimestamp(),
+        res.locals.user.id ];
+
+      pg_pool.query(query, vars, function(err, result) {
+        if (err) {
+          console.error(err);
+
+          res.render('releases/new', {
+            title: 'Add new release - ' + website_name,
+            error: 'Something went wrong. Please try again',
+            game: result.rows[0],
+            form: form });
+        }
+        else {
+          query = `
+            INSERT INTO release_revisions (
+              release_id,
+              nth_revision,
+              region,
+              title,
+              title_romaji,
+              version,
+              message,
+              created,
+              created_by)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);`;
+
+          vars = [
+            result.rows[0].id,
+            result.rows[0].revisions,
+            form.region,
+            form.title,
+            form.title_romaji ? form.title_romaji : null,
+            form.version,
+            '(System) New entry',
+            getTimestamp(),
+            res.locals.user.id ];
+
+          pg_pool.query(query, vars, function(err2, result2) {
+            if (err2) {
+              console.error(err2);
+            }
+
+            res.redirect('/games');
+          });
+        }
+      });
+    }
+  });
 });
 
 // ---------------------------------------------------------------------- Login

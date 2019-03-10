@@ -10,6 +10,29 @@ block content
 
       pre= game.description
 
+  h2.content-title Releases
+  div.content
+    p <a href='/releases/new/#{game.id}'>New release</a>
+
+    table.list
+      tr.header
+        td <p>Region</p>
+        td <p>Title</p>
+        td <p>Version</p>
+
+      each r in game.releases
+        tr
+          td <p>#{r.region}</p>
+
+          td
+            p
+              | <a href='/releases/#{r.id}'>#{r.title}
+              if r.title_romaji
+                | &nbsp;<span class='subdued'>(#{r.title_romaji})</span>
+              | </a>
+
+          td <p>#{r.version}</p>
+
   p.subdued
     | Entry created #{game.created} |
     | <a href='/games/edit/#{game.id}'>Edit this page</a>

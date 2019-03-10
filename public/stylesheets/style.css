@@ -93,6 +93,10 @@ h2 {
   font: 20pt 'Nova Flat', AiharaHudemojiKaisho;
   color: #fff;
 }
+h2.content-title {
+  margin-top: 10px;
+  margin-left: 20px;
+}
 p,
 pre,
 label {
@@ -147,6 +151,7 @@ a.special:hover {
 }
 table {
   width: 100%;
+  border-collapse: collapse;
 }
 table.list tr:nth-child(even) {
   background: rgba(0,0,0,0.2);
@@ -155,7 +160,6 @@ table.list tr td p a {
   color: #fff;
 }
 tr.header td p {
-  margin-left: 10px;
   font-weight: bold;
 }
 input[type='text'],

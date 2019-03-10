@@ -1,0 +1,82 @@
+extends ../layout
+
+block content
+  div.content
+    div.content-centered
+      if error
+        p.error= error
+
+      mixin form
+        input(type='hidden' name='game' value=game)
+
+        table
+          tr
+            td
+              label(for='region') Region <span class='subdued'>(e.g. JP, EN, FR, etc.)</span>
+              input#region(
+                type='text'
+                name='region'
+                placeholder='JP'
+                value=form.region
+                maxlength='2'
+                autocomplete='off' )
+
+          tr
+            td
+              label(for='title') Title <span class='subdued'>(language of release)</span>
+              input#title(
+                type='text'
+                name='title'
+                value=form.title
+                placeholder='ゆめにっき'
+                maxlength='200'
+                autocomplete='off' )
+
+          tr
+            td
+              label(for='title_romaji') Romaji Title <span class='subdued'>(if applicable)</span>
+              input#title_romaji(
+                type='text'
+                name='title_romaji'
+                placeholder='Yume Nikki'
+                value=form.title_romaji
+                maxlength='200'
+                autocomplete='off' )
+
+          tr
+            td
+              label(for='version') Version <span class='subdued'>(e.g. 1.00, or 'Steam Release')</span>
+              input#version(
+                type='text'
+                name='version'
+                placeholder='0.10'
+                value=form.version
+                maxlength='20'
+                autocomplete='off' )
+
+          tr
+            td
+              center
+                if form.id
+                  hr
+
+                  label(for='revision_message') Revision Message
+                  textarea#revision_message(name='revision_message' maxlength=200)
+
+                  input(type='submit' value='Save Changes')
+
+                else
+                  input(type='submit' value='Add Release')
+
+      if form.id
+        p.message Editing release for #{game.title}
+
+        form(action='/releases/edit/'+form.id.toString() method='post')
+          input(type='hidden' name='id' value=form.id)
+          +form
+
+      else
+        p.message Creating release for #{game.title}
+
+        form(action='/releases/new/'+game.id.toString() method='post')
+          +form
