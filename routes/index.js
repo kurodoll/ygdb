@@ -231,7 +231,8 @@ router.get('/games/:id', function(req, res, next) {
         'region', region,
         'title', title,
         'title_romaji', title_romaji,
-        'version', version)
+        'version', version,
+        'release_date', release_date)
           FROM releases WHERE game_id = $1)
             AS releases
 
@@ -386,8 +387,8 @@ router.get('/releases/new/:game_id', requireLogin, function(req, res, next) {
 });
 
 router.post('/releases/new/:game_id', requireLogin, function(req, res, next) {
-  const query = 'SELECT * FROM games WHERE id = $1;';
-  const vars = [ req.params.game_id ];
+  let query = 'SELECT * FROM games WHERE id = $1;';
+  let vars = [ req.params.game_id ];
 
   pg_pool.query(query, vars, function(err, result) {
     if (err) {
@@ -409,24 +410,26 @@ router.post('/releases/new/:game_id', requireLogin, function(req, res, next) {
         form: form });
     }
     else {
-      let query = `
+      query = `
         INSERT INTO releases (
           game_id,
           region,
           title,
           title_romaji,
           version,
+          release_date,
           created,
           created_by)
-        VALUES ($1, $2, $3, $4, $5, $6)
+        VALUES ($1, $2, $3, $4, $5, $6, $7)
         RETURNING *;`;
 
-      let vars = [
+      vars = [
         result.rows[0].id,
         form.region,
         form.title,
         form.title_romaji ? form.title_romaji : null,
         form.version,
+        form.release_date ? form.release_date : null,
         getTimestamp(),
         res.locals.user.id ];
 
@@ -449,10 +452,11 @@ router.post('/releases/new/:game_id', requireLogin, function(req, res, next) {
               title,
               title_romaji,
               version,
+              release_date,
               message,
               created,
               created_by)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);`;
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);`;
 
           vars = [
             result.rows[0].id,
@@ -461,6 +465,7 @@ router.post('/releases/new/:game_id', requireLogin, function(req, res, next) {
             form.title,
             form.title_romaji ? form.title_romaji : null,
             form.version,
+            form.release_date ? form.release_date : null,
             '(System) New entry',
             getTimestamp(),
             res.locals.user.id ];
@@ -476,6 +481,175 @@ router.post('/releases/new/:game_id', requireLogin, function(req, res, next) {
       });
     }
   });
+});
+
+// --------------------------------------------------------------- Edit Release
+router.get('/releases/edit/:id', requireLogin, function(req, res, next) {
+  let query = 'SELECT * FROM releases WHERE id = $1;';
+  let vars = [ req.params.id ];
+
+  pg_pool.query(query, vars, function(err, result) {
+    if (err) {
+      console.error(err);
+    }
+
+    query = 'SELECT * FROM games WHERE id = $1;';
+    vars = [ result.rows[0].game_id ];
+
+    pg_pool.query(query, vars, function(err2, result2) {
+      if (err2) {
+        console.error(err2);
+      }
+
+      res.render('releases/new', {
+        title: 'Edit release - ' + website_name,
+        game: result2.rows[0],
+        form: result.rows[0] });
+    });
+  });
+});
+
+router.post('/releases/edit/:id', requireLogin, function(req, res, next) {
+  const form = req.body;
+  let error = '';
+
+  if (!form.region || !form.title || !form.version) {
+    error = 'A required field was left blank';
+  }
+  else if (!form.revision_message) {
+    error = 'A revision message is required';
+  }
+
+  if (error) {
+    query = 'SELECT * FROM games WHERE id = $1;';
+    vars = [ form.game_id ];
+
+    pg_pool.query(query, vars, function(err, result) {
+      if (err) {
+        console.error(err);
+      }
+
+      res.render('releases/new', {
+        title: 'Edit release - ' + website_name,
+        error: error,
+        game: result.rows[0],
+        form: form });
+    });
+  }
+  else {
+    let query = 'SELECT * FROM releases WHERE id = $1;';
+    let vars = [ req.params.id ];
+
+    pg_pool.query(query, vars, function(err, result) {
+      if (err) {
+        console.error(err);
+
+        query = 'SELECT * FROM games WHERE id = $1;';
+        vars = [ form.game_id ];
+
+        pg_pool.query(query, vars, function(err2, result2) {
+          if (err2) {
+            console.error(err2);
+          }
+
+          res.render('releases/new', {
+            title: 'Edit release - ' + website_name,
+            error: 'Something went wrong. Please try again',
+            game: result2.rows[0],
+            form: form });
+        });
+      }
+      else {
+        query = `
+          UPDATE releases
+          SET
+            region = $2,
+            title = $3,
+            title_romaji = $4,
+            version = $5,
+            release_date = $6,
+            revisions = dummy.revisions + 1
+          FROM (SELECT * FROM releases WHERE id = $1 FOR UPDATE) dummy
+          WHERE releases.id = dummy.id
+          RETURNING dummy.*;`;
+
+        vars = [
+          req.params.id,
+          form.region,
+          form.title,
+          form.title_romaji,
+          form.version,
+          form.release_date ];
+
+        pg_pool.query(query, vars, function(err2, result2) {
+          if (err2) {
+            console.error(err2);
+
+            query = 'SELECT * FROM games WHERE id = $1;';
+            vars = [ form.game_id ];
+
+            pg_pool.query(query, vars, function(err3, result3) {
+              if (err3) {
+                console.error(err3);
+              }
+
+              res.render('releases/new', {
+                title: 'Edit release - ' + website_name,
+                error: 'Something went wrong. Please try again',
+                game: result3.rows[0],
+                form: form });
+            });
+          }
+          else {
+            query = `
+              INSERT INTO release_revisions (
+                release_id,
+                nth_revision,
+                region,
+                title,
+                title_romaji,
+                version,
+                release_date,
+                message,
+                created,
+                created_by)
+              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);`;
+
+            vars = [
+              req.params.id,
+              result2.rows[0].revisions + 1,
+
+              form.region == result.rows[0].region ?
+                null : form.region,
+
+              form.title == result.rows[0].title ?
+                null : form.title,
+
+              form.title_romaji == result.rows[0].title_romaji ?
+                null : form.title_romaji,
+
+              form.version == result.rows[0].version ?
+                null : form.version,
+
+              form.release_date == result.rows[0].release_date ?
+                null : form.release_date,
+
+              form.revision_message,
+              getTimestamp(),
+              res.locals.user.id ];
+
+            pg_pool.query(query, vars, function(err3, result3) {
+              if (err3) {
+                console.error(err3);
+              }
+
+              res.redirect('/releases/' + req.params.id.toString());
+            });
+          }
+        });
+      }
+    });
+  }
 });
 
 // ---------------------------------------------------------------------- Login

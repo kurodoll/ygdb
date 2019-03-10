@@ -19,6 +19,8 @@ block content
         td <p>Region</p>
         td <p>Title</p>
         td <p>Version</p>
+        td <p>Release Date</p>
+        td
 
       each r in game.releases
         tr
@@ -32,6 +34,15 @@ block content
               | </a>
 
           td <p>#{r.version}</p>
+
+          td
+            if r.release_date
+              p= r.release_date
+            else
+              p.subdued Unknown
+
+          td
+            p <a class='special' href='/releases/edit/#{r.id}'>Edit</a>
 
   p.subdued
     | Entry created #{game.created} |

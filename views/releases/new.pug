@@ -7,7 +7,7 @@ block content
         p.error= error
 
       mixin form
-        input(type='hidden' name='game' value=game)
+        input(type='hidden' name='game_id' value=game.id)
 
         table
           tr
@@ -51,6 +51,17 @@ block content
                 name='version'
                 placeholder='0.10'
                 value=form.version
+                maxlength='20'
+                autocomplete='off' )
+
+          tr
+            td
+              label(for='release_date') Release Date <span class='subdued'>(YYYY.MM.DD)</span>
+              input#release_date(
+                type='text'
+                name='release_date'
+                placeholder='2000.01.01'
+                value=form.release_date
                 maxlength='20'
                 autocomplete='off' )
 
