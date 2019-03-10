@@ -19,12 +19,12 @@ div.bg {
 }
 div.nav {
   position: absolute;
-  top: 126px;
+  top: 127px;
   left: 400px;
 }
 div.nav-right {
   position: absolute;
-  top: 126px;
+  top: 127px;
   right: 50px;
 }
 div.nav p,
@@ -141,6 +141,9 @@ a.special2:hover {
   background: rgba(255,150,200,0.1) !important;
   border-bottom: 1px #ff96c8 solid !important;
 }
+a.img:hover {
+  border: none;
+}
 .monospace {
   font-family: Consolas;
 }
@@ -178,6 +181,12 @@ td {
 td.half {
   width: 50%;
 }
+td.layout-large {
+  width: 80%;
+}
+td.layout-small {
+  width: 20%;
+}
 input[type='text'],
 input[type='password'],
 input[type='submit'],
@@ -208,9 +217,15 @@ input[type='submit']:hover {
   cursor: pointer;
   border: 1px rgba(192,128,255,0.8) solid;
 }
+img {
+  width: 100%;
+}
 hr {
   border: none;
   border-bottom: 1px rgba(192,128,255,0.5) dashed;
+}
+.right {
+  float: right;
 }
 @-moz-keyframes bg-scroll {
   100% {

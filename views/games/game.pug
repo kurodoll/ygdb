@@ -1,66 +1,75 @@
 extends ../layout
 
 block content
-  div.content
-    table
-      tr
-        td.half
-          div.game-info
-            h2
-              | #{game.title}
-              if game.title_romaji
-                | &nbsp;<span class='subdued'>(#{game.title_romaji})</span>
+  table
+    tr
+      td.layout-small
+        div.content
+          for ss in game.screenshots.split('\n')
+            a.img(href=ss)
+              img(src=ss)
 
-            pre= game.description
+      td.layout-large
+        div.content
+          table
+            tr
+              td.half
+                div.game-info
+                  h2
+                    | #{game.title}
+                    if game.title_romaji
+                      | &nbsp;<span class='subdued'>(#{game.title_romaji})</span>
 
-        td.half
+                  pre= game.description
+
+              td.half
+                table.list
+                  tr
+                    td <p>Aliases</p>
+                    td <p>#{game.aliases}</p>
+
+                  tr
+                    td <p>Links</p>
+                    td
+                      each l in game.links.split('\n')
+                        p <a class='special2' href="#{l.split('::')[0]}">#{l.split('::')[1]}</a>
+
+        p.subdued.right
+          | Entry created #{game.created} |
+          | <a class='special' href='/games/edit/#{game.id}'>Edit this page</a>
+
+        h2.content-title Releases
+        div.content
+          p <a class='special' href='/releases/new/#{game.id}'>New release</a>
+
           table.list
-            tr
-              td <p>Aliases</p>
-              td <p>#{game.aliases}</p>
-
-            tr
-              td <p>Links</p>
+            tr.header
+              td <p>Region</p>
+              td <p>Type</p>
+              td <p>Title</p>
+              td <p>Version</p>
+              td <p>Release Date</p>
               td
-                each l in game.links.split('\n')
-                  p <a class='special2' href="#{l.split('::')[0]}">#{l.split('::')[1]}</a>
 
-  h2.content-title Releases
-  div.content
-    p <a class='special' href='/releases/new/#{game.id}'>New release</a>
+            each r in game.releases
+              tr
+                td <p>#{r.region}</p>
+                td <p>#{r.type}</p>
 
-    table.list
-      tr.header
-        td <p>Region</p>
-        td <p>Type</p>
-        td <p>Title</p>
-        td <p>Version</p>
-        td <p>Release Date</p>
-        td
+                td
+                  p
+                    | <a href='/releases/#{r.id}'>#{r.title}
+                    if r.title_romaji
+                      | &nbsp;<span class='subdued'>(#{r.title_romaji})</span>
+                    | </a>
 
-      each r in game.releases
-        tr
-          td <p>#{r.region}</p>
-          td <p>#{r.type}</p>
+                td <p>#{r.version}</p>
 
-          td
-            p
-              | <a href='/releases/#{r.id}'>#{r.title}
-              if r.title_romaji
-                | &nbsp;<span class='subdued'>(#{r.title_romaji})</span>
-              | </a>
+                td
+                  if r.release_date
+                    p= r.release_date
+                  else
+                    p.subdued Unknown
 
-          td <p>#{r.version}</p>
-
-          td
-            if r.release_date
-              p= r.release_date
-            else
-              p.subdued Unknown
-
-          td
-            p <a class='special' href='/releases/edit/#{r.id}'>Edit</a>
-
-  p.subdued
-    | Entry created #{game.created} |
-    | <a class='special' href='/games/edit/#{game.id}'>Edit this page</a>
+                td
+                  p <a class='special' href='/releases/edit/#{r.id}'>Edit</a>

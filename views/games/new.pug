@@ -51,6 +51,11 @@ block content
 
           tr
             td
+              label(for='screenshots') Screenshots <span class='subdued'>(one URL per line)</span>
+              textarea#screenshots(name='screenshots' maxlength='5000')=form.screenshots
+
+          tr
+            td
               label(for='links') Links <span class='subdued'>(one link per line, format is URL::Title)</span>
               textarea#links(name='links' maxlength='5000')=form.links
 
