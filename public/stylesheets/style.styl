@@ -1,4 +1,9 @@
-@import url('https://fonts.googleapis.com/css?family=Graduate')
+@import url('https://fonts.googleapis.com/css?family=Graduate|Nova+Flat')
+
+@font-face // For Japanese text
+  font-family AiharaHudemojiKaisho
+  src url("/fonts/AiharaHudemojiKaisho2.01.ttf")
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 // *                                                     * // Content Areas //
@@ -70,6 +75,10 @@ div.content-centered
   margin-top 15px
   margin-bottom 15px
 
+div.game-info
+  padding 10px
+  background rgba(0,0,0,.3)
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 // *                                                              * // Text //
@@ -98,11 +107,17 @@ span.logo-effect:hover
               -6px  6px 60px rgb(0,189,189)
 
 h1 a
-  text-decoration none
+  border-bottom none !important
 
   -webkit-text-fill-color rgba(255,255,255,.5)
   -webkit-text-stroke-width 2px
   -webkit-text-stroke-color white
+
+h2
+  margin 0
+
+  font 20pt 'Nova Flat', AiharaHudemojiKaisho
+  color white
 
 p, label
   margin 3px
@@ -136,6 +151,10 @@ span.highlight
 
 a
   text-decoration none
+  color rgb(255,200,100)
+
+a:hover
+  border-bottom 1px rgba(255,255,255,.5) solid
 
 a.special
   color rgb(100,255,200) !important
@@ -155,6 +174,9 @@ table
 
 table.list tr:nth-child(even)
   background rgba(0,0,0,.2)
+
+table.list tr td p a
+  color white
 
 tr.header td p
   margin-left 10px

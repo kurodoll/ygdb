@@ -1,0 +1,11 @@
+extends ../layout
+
+block content
+  div.content
+    div.game-info
+      h2
+        | #{game.title}
+        if game.title_romaji
+          | &nbsp;<span class='subdued'>(#{game.title_romaji})</span>
+
+  p.subdued Entry created #{game.created}

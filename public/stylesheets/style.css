@@ -1,4 +1,8 @@
-@import url("https://fonts.googleapis.com/css?family=Graduate");
+@import url("https://fonts.googleapis.com/css?family=Graduate|Nova+Flat");
+@font-face {
+  font-family: AiharaHudemojiKaisho;
+  src: url("/fonts/AiharaHudemojiKaisho2.01.ttf");
+}
 body {
   background: #000;
 }
@@ -60,6 +64,10 @@ div.content-centered {
   margin-top: 15px;
   margin-bottom: 15px;
 }
+div.game-info {
+  padding: 10px;
+  background: rgba(0,0,0,0.3);
+}
 h1 {
   margin: 0;
   padding-left: 30px;
@@ -75,10 +83,15 @@ span.logo-effect:hover {
   text-shadow: -4px 2px 0px rgba(0,230,230,0.5), -8px 4px 0px rgba(1,204,204,0.5), -12px 6px 0px rgba(0,189,189,0.5), -2px 2px 20px #00e6e6, -4px 4px 40px #01cccc, -6px 6px 60px #00bdbd;
 }
 h1 a {
-  text-decoration: none;
+  border-bottom: none !important;
   -webkit-text-fill-color: rgba(255,255,255,0.5);
   -webkit-text-stroke-width: 2px;
   -webkit-text-stroke-color: #fff;
+}
+h2 {
+  margin: 0;
+  font: 20pt 'Nova Flat', AiharaHudemojiKaisho;
+  color: #fff;
 }
 p,
 label {
@@ -112,6 +125,10 @@ span.highlight {
 }
 a {
   text-decoration: none;
+  color: #ffc864;
+}
+a:hover {
+  border-bottom: 1px rgba(255,255,255,0.5) solid;
 }
 a.special {
   color: #64ffc8 !important;
@@ -128,6 +145,9 @@ table {
 }
 table.list tr:nth-child(even) {
   background: rgba(0,0,0,0.2);
+}
+table.list tr td p a {
+  color: #fff;
 }
 tr.header td p {
   margin-left: 10px;

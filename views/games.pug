@@ -10,6 +10,7 @@ block content
         tr
           td
             p
-              | #{g.title}
+              | <a href='/games/#{g.id}'>#{g.title}
               if g.title_romaji
                 | &nbsp;<span class='subdued'>(#{g.title_romaji})</span>
+              | </a>
