@@ -139,21 +139,6 @@ router.get('/games', function(req, res, next) {
   });
 });
 
-router.get('/games/:id', function(req, res, next) {
-  const query = 'SELECT * FROM games WHERE id = $1;';
-  const vars = [ req.params.id ];
-
-  pg_pool.query(query, vars, function(err, result) {
-    if (err) {
-      console.error(err);
-    }
-
-    res.render('games/game', {
-      title: result.rows[0].title + ' - ' + website_name,
-      game: result.rows[0] });
-  });
-});
-
 router.get('/games/new', requireLogin, function(req, res, next) {
   res.render('games/new', {
     title: 'Add new game - ' + website_name,
@@ -230,6 +215,21 @@ router.post('/games/new', requireLogin, function(req, res, next) {
       }
     });
   }
+});
+
+router.get('/games/:id', function(req, res, next) {
+  const query = 'SELECT * FROM games WHERE id = $1;';
+  const vars = [ req.params.id ];
+
+  pg_pool.query(query, vars, function(err, result) {
+    if (err) {
+      console.error(err);
+    }
+
+    res.render('games/game', {
+      title: result.rows[0].title + ' - ' + website_name,
+      game: result.rows[0] });
+  });
 });
 
 // ------------------------------------------------------------------ Edit Game
