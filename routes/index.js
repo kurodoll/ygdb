@@ -126,7 +126,17 @@ router.get('/', function(req, res, next) {
 
 // ---------------------------------------------------------------------- Games
 router.get('/games', function(req, res, next) {
-  res.render('games', { title: 'Games - ' + website_name });
+  const query = 'SELECT * FROM games;';
+
+  pg_pool.query(query, function(err, result) {
+    if (err) {
+      console.error(err);
+    }
+
+    res.render('games', {
+      title: 'Games - ' + website_name,
+      games: result.rows });
+  });
 });
 
 router.get('/games/new', requireLogin, function(req, res, next) {

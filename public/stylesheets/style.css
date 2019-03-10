@@ -126,6 +126,13 @@ a.special:hover {
 table {
   width: 100%;
 }
+table.list tr:nth-child(even) {
+  background: rgba(0,0,0,0.2);
+}
+tr.header td p {
+  margin-left: 10px;
+  font-weight: bold;
+}
 input[type='text'],
 input[type='password'],
 input[type='submit'] {
