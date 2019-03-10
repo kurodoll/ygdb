@@ -37,6 +37,15 @@ block content
 
           tr
             td
+              hr
+
+          tr
+            td
+              label(for='links') Links <span class='subdued'>(one link per line, format is URL::Title)</span>
+              textarea#links(name='links' maxlength='5000')=form.links
+
+          tr
+            td
               center
                 if form.id
                   hr

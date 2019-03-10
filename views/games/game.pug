@@ -2,13 +2,24 @@ extends ../layout
 
 block content
   div.content
-    div.game-info
-      h2
-        | #{game.title}
-        if game.title_romaji
-          | &nbsp;<span class='subdued'>(#{game.title_romaji})</span>
+    table
+      tr
+        td.half
+          div.game-info
+            h2
+              | #{game.title}
+              if game.title_romaji
+                | &nbsp;<span class='subdued'>(#{game.title_romaji})</span>
 
-      pre= game.description
+            pre= game.description
+
+        td.half
+          table.list
+            tr
+              td <p>Links</p>
+              td
+                each l in game.links.split('\n')
+                  p <a class='special2' href="#{l.split('::')[0]}">#{l.split('::')[1]}</a>
 
   h2.content-title Releases
   div.content
