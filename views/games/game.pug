@@ -40,8 +40,6 @@ block content
 
         h2.content-title Releases
         div.content
-          p <a class='special' href='/releases/new/#{game.id}'>New release</a>
-
           table.list
             tr.header
               td <p>Region</p>
@@ -73,3 +71,5 @@ block content
 
                 td
                   p <a class='special' href='/releases/edit/#{r.id}'>Edit</a>
+
+        p.right <a class='special' href='/releases/new/#{game.id}'>New release</a>
