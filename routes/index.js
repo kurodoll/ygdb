@@ -170,7 +170,7 @@ router.get('/games', function(req, res, next) {
             AS rating_bayesian,
 
       (SELECT COUNT(ratings.rating) AS ratings
-        FROM ratings WHERE games.id = ratings.game_id)
+        FROM ratings WHERE games.id = ratings.game_id AND active = TRUE)
           AS n_ratings
 
     FROM games;`;
