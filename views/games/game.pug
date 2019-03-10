@@ -1,6 +1,83 @@
 extends ../layout
 
 block content
+  script.
+    const rainbow_thin = [
+      'rgba(253,163,180,.2)',
+      'rgba(253,195,163,.2)',
+      'rgba(253,242,163,.2)',
+      'rgba(204,253,163,.2)',
+      'rgba(163,253,170,.2)',
+      'rgba(163,253,217,.2)',
+      'rgba(163,253,249,.2)',
+      'rgba(163,221,253,.2)',
+      'rgba(163,170,253,.2)',
+      'rgba(212,163,253,.2)' ];
+
+    const rainbow_deep = [
+      'rgba(253,163,180,.8)',
+      'rgba(253,195,163,.8)',
+      'rgba(253,242,163,.8)',
+      'rgba(204,253,163,.8)',
+      'rgba(163,253,170,.8)',
+      'rgba(163,253,217,.8)',
+      'rgba(163,253,249,.8)',
+      'rgba(163,221,253,.8)',
+      'rgba(163,170,253,.8)',
+      'rgba(212,163,253,.8)' ];
+
+    const rainbow_full = [
+      'rgb(253,163,180)',
+      'rgb(253,195,163)',
+      'rgb(253,242,163)',
+      'rgb(204,253,163)',
+      'rgb(163,253,170)',
+      'rgb(163,253,217)',
+      'rgb(163,253,249)',
+      'rgb(163,221,253)',
+      'rgb(163,170,253)',
+      'rgb(212,163,253)' ];
+
+    function renderRatingsChart() {
+      let ratings = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+      Chart.defaults.global.defaultFontFamily = 'Verdana';
+      Chart.defaults.global.defaultFontSize = 9;
+
+      let ctx = document.getElementById('ratings-chart').getContext('2d');
+      let chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
+          datasets: [{
+            label: ' Ratings',
+            data: ratings,
+            backgroundColor: rainbow_thin,
+            borderColor: rainbow_deep,
+            borderWidth: 1
+          }]
+        },
+        options: {
+          legend: {
+            display: false
+          },
+          scales: {
+            yAxes: [{
+              position: 'right',
+              ticks: {
+                callback: function(value) { if (value % 1 === 0) { return value; }}
+              }
+            }]
+          }
+        }
+      });
+    }
+
+    $(document).ready(function() {
+      renderRatingsChart();
+    });
+
+
   table
     tr
       td.layout-small
@@ -79,3 +156,13 @@ block content
                   p.right <a class='special' href='/releases/edit/#{r.id}'>Edit</a>
 
         p.right <a class='special' href='/releases/new/#{game.id}'>New release</a>
+
+        h2.content-title Reviews & Ratings
+        table
+          tr
+            td.layout-large2
+              div.content
+
+            td.layout-small2
+              div.content
+                canvas#ratings-chart
