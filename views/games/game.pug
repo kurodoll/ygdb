@@ -166,12 +166,12 @@ block content
         div.content
           table.list
             tr.header
-              td <p>Release Date</p>
-              td <p>Version</p>
-              td <p>Region</p>
+              td(width='100px') <p>Release Date</p>
+              td(width='60px') <p>Region</p>
+              td(width='200px') <p>Version</p>
               td <p>Type</p>
-              td <p>Title</p>
-              td
+              td(width='50%') <p>Title</p>
+              td(width='100px')
 
             each r in game.releases
               tr
@@ -181,11 +181,11 @@ block content
                   else
                     p.subdued Unknown
 
-                td <p>#{r.version}</p>
                 td <p>#{r.region}</p>
+                td <p>#{r.version}</p>
                 td <p>#{r.type}</p>
 
-                td(width='50%')
+                td
                   p
                     | <a href='/releases/#{r.id}'>#{r.title}
                     if r.title_romaji

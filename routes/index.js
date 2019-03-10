@@ -593,7 +593,7 @@ router.post('/releases/new/:game_id', requireLogin, function(req, res, next) {
           release_date,
           created,
           created_by)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
         RETURNING *;`;
 
       vars = [
@@ -651,7 +651,7 @@ router.post('/releases/new/:game_id', requireLogin, function(req, res, next) {
               console.error(err2);
             }
 
-            res.redirect('/games');
+            res.redirect('/games/' + result.rows[0].id.toString());
           });
         }
       });
