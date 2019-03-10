@@ -164,6 +164,7 @@ router.post('/games/new', requireLogin, function(req, res, next) {
       INSERT INTO games (
         title,
         title_romaji,
+        description,
         created,
         created_by)
       VALUES ($1, $2, $3, $4)
@@ -171,7 +172,8 @@ router.post('/games/new', requireLogin, function(req, res, next) {
 
     let vars = [
       form.title,
-      form.title_romaji,
+      form.title_romaji ? form.title_romaji : null,
+      form.description ? form.description : null,
       getTimestamp(),
       res.locals.user.id ];
 
@@ -191,6 +193,7 @@ router.post('/games/new', requireLogin, function(req, res, next) {
             nth_revision,
             title,
             title_romaji,
+            description,
             message,
             created,
             created_by)
@@ -201,6 +204,7 @@ router.post('/games/new', requireLogin, function(req, res, next) {
           result.rows[0].revisions,
           form.title,
           form.title_romaji ? form.title_romaji : null,
+          form.description ? form.description : null,
           '(System) New entry',
           getTimestamp(),
           res.locals.user.id ];
@@ -284,6 +288,7 @@ router.post('/games/edit/:id', requireLogin, function(req, res, next) {
           SET
             title = $2,
             title_romaji = $3,
+            description = $4,
             revisions = dummy.revisions + 1
           FROM (SELECT * FROM games WHERE id = $1 FOR UPDATE) dummy
           WHERE games.id = dummy.id
@@ -292,7 +297,8 @@ router.post('/games/edit/:id', requireLogin, function(req, res, next) {
         let vars = [
           req.params.id,
           form.title,
-          form.title_romaji ];
+          form.title_romaji,
+          form.description ];
 
         pg_pool.query(query, vars, function(err2, result2) {
           if (err2) {
@@ -310,10 +316,11 @@ router.post('/games/edit/:id', requireLogin, function(req, res, next) {
                 nth_revision,
                 title,
                 title_romaji,
+                description,
                 message,
                 created,
                 created_by)
-              VALUES ($1, $2, $3, $4, $5, $6);`;
+              VALUES ($1, $2, $3, $4, $5, $6, $7, $8);`;
 
             vars = [
               req.params.id,
@@ -324,6 +331,9 @@ router.post('/games/edit/:id', requireLogin, function(req, res, next) {
 
               form.title_romaji == result.rows[0].title_romaji ?
                 null : form.title_romaji,
+
+              form.description == result.rows[0].description ?
+                null : form.description,
 
               form.revision_message,
               getTimestamp(),

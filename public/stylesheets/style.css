@@ -94,6 +94,7 @@ h2 {
   color: #fff;
 }
 p,
+pre,
 label {
   margin: 3px;
   font: 8pt Verdana;
@@ -116,6 +117,10 @@ p.error {
 p.message {
   color: #64ff64;
   background: linear-gradient(90deg, rgba(100,255,100,0.1), transparent);
+}
+pre {
+  white-space: pre-wrap;
+  word-wrap: break-all;
 }
 label {
   font-size: 7pt;

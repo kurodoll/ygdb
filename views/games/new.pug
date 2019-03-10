@@ -30,11 +30,10 @@ block content
                 maxlength='200'
                 autocomplete='off' )
 
+          tr
+            td
               label(for='description') Game Description
-              textarea#description(
-                name='description'
-                value=form.description
-                maxlength='5000' )
+              textarea#description(name='description' maxlength='5000')=form.description
 
           tr
             td
