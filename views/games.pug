@@ -1,10 +1,33 @@
 extends layout
 
 block content
+  script.
+    const rainbow_full = [
+      'rgb(253,163,180)',
+      'rgb(253,195,163)',
+      'rgb(253,242,163)',
+      'rgb(204,253,163)',
+      'rgb(163,253,170)',
+      'rgb(163,253,217)',
+      'rgb(163,253,249)',
+      'rgb(163,221,253)',
+      'rgb(163,170,253)',
+      'rgb(212,163,253)' ];
+
+    $(document).ready(function() {
+      // Set the text colour of all rating values to a rainbow colour
+      $('.rating').each(function(i, obj) {
+        $(this).css('color', rainbow_full[Math.round($(this).text()) - 1]);
+      });
+    });
+
+
   div.content
     table.list
       tr.header
         td <p>Title</p>
+        td <p>Rating <span class='subdued'>(Bayesian)</span></p>
+        td <p># Ratings</p>
 
       each g in games
         tr
@@ -14,3 +37,9 @@ block content
               if g.title_romaji
                 | &nbsp;<span class='subdued'>(#{g.title_romaji})</span>
               | </a>
+
+          td
+            p.rating= g.rating_bayesian
+
+          td
+            p= g.n_ratings

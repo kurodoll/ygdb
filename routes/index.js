@@ -157,7 +157,23 @@ router.get('/', function(req, res, next) {
 
 // ---------------------------------------------------------------------- Games
 router.get('/games', function(req, res, next) {
-  const query = 'SELECT * FROM games;';
+  const query = `
+    SELECT
+      *,
+      
+      (SELECT getBayesianRating(
+        COUNT(ratings.rating)::integer,
+        AVG(ratings.rating)::real,
+        1::integer,
+        5.5::real )
+          FROM ratings WHERE games.id = ratings.game_id AND active = TRUE)
+            AS rating_bayesian,
+
+      (SELECT COUNT(ratings.rating) AS ratings
+        FROM ratings WHERE games.id = ratings.game_id)
+          AS n_ratings
+
+    FROM games;`;
 
   pg_pool.query(query, function(err, result) {
     if (err) {
