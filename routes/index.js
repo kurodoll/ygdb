@@ -164,16 +164,18 @@ router.post('/games/new', requireLogin, function(req, res, next) {
       INSERT INTO games (
         title,
         title_romaji,
+        aliases,
         description,
         links,
         created,
         created_by)
-      VALUES ($1, $2, $3, $4, $5)
+      VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING *;`;
 
     let vars = [
       form.title,
       form.title_romaji ? form.title_romaji : null,
+      form.aliases ? form.aliases : null,
       form.description ? form.description : null,
       getTimestamp(),
       res.locals.user.id ];
@@ -194,18 +196,20 @@ router.post('/games/new', requireLogin, function(req, res, next) {
             nth_revision,
             title,
             title_romaji,
+            aliases,
             description,
             links,
             message,
             created,
             created_by)
-          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);`;
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);`;
 
         vars = [
           result.rows[0].id,
           result.rows[0].revisions,
           form.title,
           form.title_romaji ? form.title_romaji : null,
+          form.aliases ? form.aliases : null,
           form.description ? form.description : null,
           form.inks ? form.links : null,
           '(System) New entry',
@@ -307,8 +311,9 @@ router.post('/games/edit/:id', requireLogin, function(req, res, next) {
           SET
             title = $2,
             title_romaji = $3,
-            description = $4,
-            links = $5,
+            aliases = $4,
+            description = $5,
+            links = $6,
             revisions = dummy.revisions + 1
           FROM (SELECT * FROM games WHERE id = $1 FOR UPDATE) dummy
           WHERE games.id = dummy.id
@@ -318,6 +323,7 @@ router.post('/games/edit/:id', requireLogin, function(req, res, next) {
           req.params.id,
           form.title,
           form.title_romaji,
+          form.aliases,
           form.description,
           form.links ];
 
@@ -337,12 +343,13 @@ router.post('/games/edit/:id', requireLogin, function(req, res, next) {
                 nth_revision,
                 title,
                 title_romaji,
+                aliases,
                 description,
                 links,
                 message,
                 created,
                 created_by)
-              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);`;
+              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);`;
 
             vars = [
               req.params.id,
@@ -353,6 +360,9 @@ router.post('/games/edit/:id', requireLogin, function(req, res, next) {
 
               form.title_romaji == result.rows[0].title_romaji ?
                 null : form.title_romaji,
+
+              form.aliases == result.rows[0].aliases ?
+                null : form.aliases,
 
               form.description == result.rows[0].description ?
                 null : form.description,

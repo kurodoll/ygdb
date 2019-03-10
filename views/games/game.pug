@@ -16,6 +16,10 @@ block content
         td.half
           table.list
             tr
+              td <p>Aliases</p>
+              td <p>#{game.aliases}</p>
+
+            tr
               td <p>Links</p>
               td
                 each l in game.links.split('\n')
