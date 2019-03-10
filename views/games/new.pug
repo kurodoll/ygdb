@@ -51,6 +51,20 @@ block content
 
           tr
             td
+              label(for='creator') Creator
+              input#creator(
+                type='text'
+                name='creator'
+                value=form.creator
+                maxlength='50'
+                autocomplete='off' )
+
+          tr
+            td
+              hr
+
+          tr
+            td
               label(for='screenshots') Screenshots <span class='subdued'>(one URL per line)</span>
               textarea#screenshots(name='screenshots' maxlength='5000')=form.screenshots
 

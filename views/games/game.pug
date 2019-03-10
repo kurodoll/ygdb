@@ -26,11 +26,15 @@ block content
               td.half
                 table.list
                   tr
-                    td <p>Aliases</p>
+                    td <p class='subdued'>Aliases</p>
                     td <p>#{game.aliases}</p>
 
                   tr
-                    td <p>Links</p>
+                    td <p class='subdued'>Creator</p>
+                    td <p>#{game.creator}</p>
+
+                  tr
+                    td <p class='subdued'>Links</p>
                     td
                       if game.links
                         each l in game.links.split('\n')
