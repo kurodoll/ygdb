@@ -173,7 +173,8 @@ router.get('/games', function(req, res, next) {
         FROM ratings WHERE games.id = ratings.game_id AND active = TRUE)
           AS n_ratings
 
-    FROM games;`;
+    FROM games
+    ORDER BY rating_bayesian DESC NULLS LAST;`;
 
   pg_pool.query(query, function(err, result) {
     if (err) {
@@ -1084,9 +1085,10 @@ router.get('/user/list/:id', function(req, res, next) {
         WHERE
           play_status.status = 'Backlog' OR
           play_status.status = 'Playing' OR
-          play_status.status = 'Completed')
-
-        AS releases;`;
+          play_status.status = 'Completed'
+          
+        ORDER BY ratings.created DESC)
+          AS releases;`;
 
   const vars = [ req.params.id ];
 
