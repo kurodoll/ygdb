@@ -658,7 +658,7 @@ router.post('/releases/new/:game_id', requireLogin, function(req, res, next) {
               console.error(err2);
             }
 
-            res.redirect('/games/' + req.params.id.toString());
+            res.redirect('/games/' + req.params.game_id.toString());
           });
         }
       });
