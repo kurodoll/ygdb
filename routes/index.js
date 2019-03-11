@@ -1083,9 +1083,7 @@ router.get('/user/list/:id', function(req, res, next) {
           AND ratings.active = TRUE
           
         WHERE
-          play_status.status = 'Backlog' OR
-          play_status.status = 'Playing' OR
-          play_status.status = 'Completed'
+          play_status.status <> 'Status?'
           
         ORDER BY ratings.created DESC)
           AS releases;`;

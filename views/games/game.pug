@@ -207,7 +207,7 @@ block content
                     p.right
                       if user
                         | <select class='status-select' name='status'>
-                        each o in ['Status?', 'Backlog', 'Playing', 'Stopped Midway', 'Completed', '100%ed', 'Dropped']
+                        each o in ['Status?', 'Backlog', 'Playing', 'Stopped', 'Completed', '100%ed', 'Dropped']
                           if o == r.status
                             | <option value='#{o}' selected='selected'>#{o}</option>
                           else
