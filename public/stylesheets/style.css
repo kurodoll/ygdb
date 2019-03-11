@@ -254,6 +254,10 @@ select {
   font: 7pt Verdana;
   color: #fff;
 }
+select:hover {
+  color: #64ffc8;
+  cursor: pointer;
+}
 option {
   background: #000;
 }
