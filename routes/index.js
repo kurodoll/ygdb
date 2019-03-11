@@ -277,7 +277,7 @@ router.post('/games/new', requireLogin, function(req, res, next) {
             console.error(err2);
           }
 
-          res.redirect('/games');
+          res.redirect('/games/' + result.rows[0].id.toString());
         });
       }
     });
@@ -658,7 +658,7 @@ router.post('/releases/new/:game_id', requireLogin, function(req, res, next) {
               console.error(err2);
             }
 
-            res.redirect('/games/' + result.rows[0].id.toString());
+            res.redirect('/games/' + req.params.id.toString());
           });
         }
       });
