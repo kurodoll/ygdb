@@ -1068,7 +1068,8 @@ router.get('/user/list/:id', function(req, res, next) {
       'version', releases.version,
       'release_date', releases.release_date,
       'status', play_status.status,
-      'rating', ratings.rating)
+      'rating', ratings.rating,
+      'rating_created', ratings.created)
         FROM releases
 
         LEFT JOIN play_status
