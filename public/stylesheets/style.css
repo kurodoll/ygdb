@@ -261,6 +261,9 @@ select:hover {
 option {
   background: #000;
 }
+canvas {
+  margin-top: 10px;
+}
 img {
   width: 100%;
 }
