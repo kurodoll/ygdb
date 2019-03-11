@@ -116,6 +116,14 @@ block content
 
         return false; // Not sure if this is actually needed
       });
+
+      $('.status-select').change(function() {
+        $.ajax({
+          type: 'POST',
+          url: '/releases/status_change',
+          data: $(this).parent().parent().serialize()
+        });
+      });
     });
 
 
@@ -171,7 +179,7 @@ block content
               td(width='200px') <p>Version</p>
               td <p>Type</p>
               td(width='50%') <p>Title</p>
-              td(width='100px')
+              td(width='200px')
 
             each r in game.releases
               tr
@@ -193,7 +201,19 @@ block content
                     | </a>
 
                 td
-                  p.right <a class='special' href='/releases/edit/#{r.id}'>Edit</a>
+                  form
+                    input(type='hidden' name='release_id' value=r.id)
+
+                    p.right
+                      if user
+                        | <select class='status-select' name='status'>
+                        each o in ['Status?', 'Backlog', 'Playing', 'Completed']
+                          if o == r.status
+                            | <option value='#{o}' selected='selected'>#{o}</option>
+                          else
+                            | <option value='#{o}'>#{o}</option>
+                        | </select>
+                      | <a class='special' href='/releases/edit/#{r.id}'>Edit</a>
 
         p.right <a class='special' href='/releases/new/#{game.id}'>New release</a>
 

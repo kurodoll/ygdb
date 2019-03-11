@@ -290,14 +290,21 @@ router.get('/games/:id', function(req, res, next) {
       *,
 
       array(SELECT json_build_object(
-        'id', id,
-        'region', region,
-        'type', type,
-        'title', title,
-        'title_romaji', title_romaji,
-        'version', version,
-        'release_date', release_date)
-          FROM releases WHERE game_id = $1)
+        'id', releases.id,
+        'region', releases.region,
+        'type', releases.type,
+        'title', releases.title,
+        'title_romaji', releases.title_romaji,
+        'version', releases.version,
+        'release_date', releases.release_date,
+        'status', play_status.status)
+          FROM releases
+
+          LEFT JOIN play_status
+            ON releases.id = play_status.release_id
+            AND play_status.user_id = $2
+
+          WHERE game_id = $1)
             AS releases,
 
       array(SELECT rating FROM ratings WHERE game_id = $1 AND active = TRUE)
@@ -653,6 +660,48 @@ router.post('/releases/new/:game_id', requireLogin, function(req, res, next) {
 
             res.redirect('/games/' + result.rows[0].id.toString());
           });
+        }
+      });
+    }
+  });
+});
+
+router.post('/releases/status_change', requireLogin, function(req, res, next) {
+  const form = req.body;
+
+  let query = 'SELECT FROM play_status WHERE release_id = $1 AND user_id = $2;';
+  let vars = [
+    form.release_id,
+    res.locals.user.id ];
+
+  pg_pool.query(query, vars, function(err, result) {
+    if (err) {
+      console.error(err);
+    }
+    else {
+      if (result.rows.length) {
+        query = `
+          UPDATE play_status
+          SET status = $3
+          WHERE release_id = $1 AND user_id = $2;`;
+      }
+      else {
+        query = `
+          INSERT INTO play_status (
+            release_id,
+            user_id,
+            status )
+          VALUES ($1, $2, $3);`;
+      }
+
+      vars = [
+        form.release_id,
+        res.locals.user.id,
+        form.status ];
+
+      pg_pool.query(query, vars, function(err, result) {
+        if (err) {
+          console.error(err);
         }
       });
     }

@@ -243,6 +243,20 @@ input[type='submit']:hover {
 textarea {
   height: 100px;
 }
+select {
+  padding: 0;
+  width: 100px;
+  height: 12px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: transparent;
+  border: none;
+  font: 7pt Verdana;
+  color: #fff;
+}
+option {
+  background: #000;
+}
 img {
   width: 100%;
 }
