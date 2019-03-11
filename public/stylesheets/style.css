@@ -50,15 +50,16 @@ div.nav-right p a {
 div.nav p a {
   color: #64c8ff;
 }
-div.nav p a:hover,
-div.nav-right p a:hover {
+div.nav p a:hover {
   text-decoration: none;
-  background: rgba(255,200,100,0.1);
-  border-bottom: 1px #ffc864 solid;
 }
 div.nav p a:hover {
   background: rgba(100,200,255,0.1);
   border-bottom: 1px #64c8ff solid;
+}
+div.nav-right p a:hover {
+  background: rgba(255,200,100,0.1);
+  border-bottom: 1px #ffc864 solid;
 }
 div.content {
   box-sizing: border-box;
@@ -150,11 +151,11 @@ a.special:hover {
   border-bottom: 1px #64ffc8 solid !important;
 }
 a.special2 {
-  color: #ff96c8 !important;
+  color: #d4a3fd !important;
 }
 a.special2:hover {
-  background: rgba(255,150,200,0.1) !important;
-  border-bottom: 1px #ff96c8 solid !important;
+  background: rgba(212,163,253,0.1) !important;
+  border-bottom: 1px #d4a3fd solid !important;
 }
 a.img:hover {
   border: none;
