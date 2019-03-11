@@ -25,7 +25,7 @@ html
     div.nav-right
       if user
         p
-          | Logged in as <span class='highlight'>#{user.username}</span>
+          | Logged in as <a href='/user/list/#{user.id}'><span class='highlight'>#{user.username}</span></a>
           | <a href='/logout'>(Logout)</a>
       else
         p

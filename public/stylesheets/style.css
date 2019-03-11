@@ -29,12 +29,12 @@ div.sprite {
 }
 div.nav {
   position: absolute;
-  top: 127px;
+  top: 126px;
   left: 400px;
 }
 div.nav-right {
   position: absolute;
-  top: 127px;
+  top: 126px;
   right: 120px;
 }
 div.nav p,

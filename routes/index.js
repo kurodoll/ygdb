@@ -1055,4 +1055,43 @@ router.get('/logout', function(req, res, next) {
   res.redirect('/');
 });
 
+// ----------------------------------------------------------------------- List
+router.get('/user/list/:id', function(req, res, next) {
+  const query = `
+    SELECT
+      array(SELECT json_build_object(
+      'id', releases.id,
+      'region', releases.region,
+      'type', releases.type,
+      'title', releases.title,
+      'title_romaji', releases.title_romaji,
+      'version', releases.version,
+      'release_date', releases.release_date,
+      'status', play_status.status)
+        FROM releases
+
+        LEFT JOIN play_status
+          ON releases.id = play_status.release_id
+          AND play_status.user_id = $1
+          
+        WHERE
+          play_status.status = 'Backlog' OR
+          play_status.status = 'Playing' OR
+          play_status.status = 'Completed')
+
+        AS releases;`;
+
+  const vars = [ req.params.id ];
+
+  pg_pool.query(query, vars, function(err, result) {
+    if (err) {
+      console.error(err);
+    }
+
+    res.render('user/list', {
+      title: 'User#' + req.params.id.toString() + ' - ' + website_name,
+      list: result.rows[0] });
+  });
+});
+
 module.exports = router;
