@@ -1067,12 +1067,18 @@ router.get('/user/list/:id', function(req, res, next) {
       'title_romaji', releases.title_romaji,
       'version', releases.version,
       'release_date', releases.release_date,
-      'status', play_status.status)
+      'status', play_status.status,
+      'rating', ratings.rating)
         FROM releases
 
         LEFT JOIN play_status
           ON releases.id = play_status.release_id
           AND play_status.user_id = $1
+
+        LEFT JOIN ratings
+          ON releases.game_id = ratings.game_id
+          AND ratings.user_id = $1
+          AND ratings.active = TRUE
           
         WHERE
           play_status.status = 'Backlog' OR

@@ -2,7 +2,24 @@ extends ../layout
 
 block content
   script.
+    const rainbow_full = [
+      'rgb(253,163,180)',
+      'rgb(253,195,163)',
+      'rgb(253,242,163)',
+      'rgb(204,253,163)',
+      'rgb(163,253,170)',
+      'rgb(163,253,217)',
+      'rgb(163,253,249)',
+      'rgb(163,221,253)',
+      'rgb(163,170,253)',
+      'rgb(212,163,253)' ];
+
     $(document).ready(function() {
+      // Set the text colour of all rating values to a rainbow colour
+      $('.rating').each(function(i, obj) {
+        $(this).css('color', rainbow_full[Math.round($(this).text()) - 1]);
+      });
+
       $('.status-select').change(function() {
         $.ajax({
           type: 'POST',
@@ -20,7 +37,8 @@ block content
         td(width='60px') <p>Region</p>
         td(width='200px') <p>Version</p>
         td <p>Type</p>
-        td(width='50%') <p>Title</p>
+        td(width='40%') <p>Title</p>
+        td(width='10%') <p>Rating</p>
         td(width='200px')
 
       each r in list.releases
@@ -42,6 +60,8 @@ block content
                 | &nbsp;<span class='subdued'>(#{r.title_romaji})</span>
               | </a>
 
+          td <p class='rating'>#{r.rating}</p>
+
           td
             form
               input(type='hidden' name='release_id' value=r.id)
@@ -55,4 +75,4 @@ block content
                     else
                       | <option value='#{o}'>#{o}</option>
                   | </select>
-                | <a class='special' href='/releases/edit/#{r.id}'>Edit</a>
+                | <a class='special' href='/releases/edit/#{r.id}'>Edit release</a>
