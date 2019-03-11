@@ -26,6 +26,7 @@ block content
     table.list
       tr.header
         td <p>Title</p>
+        td <p>Aliases</p>
         td <p>Rating <span class='subdued'>(Bayesian)</span></p>
         td <p># Ratings</p>
 
@@ -37,6 +38,9 @@ block content
               if g.title_romaji
                 | &nbsp;<span class='subdued'>(#{g.title_romaji})</span>
               | </a>
+
+          td
+            p <span class='subdued'>#{g.aliases}</span>
 
           td
             p.rating= g.rating_bayesian
