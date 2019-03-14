@@ -263,12 +263,12 @@ router.post('/games/new', requireLogin, function(req, res, next) {
 
     let vars = [
       form.title,
-      form.title_romaji ? form.title_romaji : null,
-      form.aliases ? form.aliases : null,
-      form.description ? form.description : null,
-      form.creator ? form.creator : null,
-      form.screenshots ? form.screenshots : null,
-      form.links ? form.links : null,
+      form.title_romaji,
+      form.aliases,
+      form.description,
+      form.creator,
+      form.screenshots,
+      form.links,
       getTimestamp(),
       res.locals.user.id ];
 
@@ -302,12 +302,12 @@ router.post('/games/new', requireLogin, function(req, res, next) {
           result.rows[0].id,
           result.rows[0].revisions,
           form.title,
-          form.title_romaji ? form.title_romaji : null,
-          form.aliases ? form.aliases : null,
-          form.description ? form.description : null,
-          form.creator ? form.creator : null,
-          form.screenshots ? form.screenshots : null,
-          form.inks ? form.links : null,
+          form.title_romaji,
+          form.aliases,
+          form.description,
+          form.creator,
+          form.screenshots,
+          form.links,
           '(System) New entry',
           getTimestamp(),
           res.locals.user.id ];
@@ -633,7 +633,7 @@ router.post('/releases/new/:game_id', requireLogin, function(req, res, next) {
       // Check if there's a file upload
       let file_path = null;
 
-      if (req.files) {
+      if (req.files.file) {
         file_path
           = req.files.file.name
           + getTimestamp()
@@ -667,9 +667,9 @@ router.post('/releases/new/:game_id', requireLogin, function(req, res, next) {
         form.region,
         form.type,
         form.title,
-        form.title_romaji ? form.title_romaji : null,
+        form.title_romaji,
         form.version,
-        form.release_date ? form.release_date : null,
+        form.release_date,
         file_path,
         getTimestamp(),
         res.locals.user.id ];
@@ -707,9 +707,9 @@ router.post('/releases/new/:game_id', requireLogin, function(req, res, next) {
             form.region,
             form.type,
             form.title,
-            form.title_romaji ? form.title_romaji : null,
+            form.title_romaji,
             form.version,
-            form.release_date ? form.release_date : null,
+            form.release_date,
             file_path,
             '(System) New entry',
             getTimestamp(),
@@ -850,7 +850,7 @@ router.post('/releases/edit/:id', requireLogin, function(req, res, next) {
         // Check if there's a file upload
         let file_path = null;
 
-        if (req.files) {
+        if (req.files.file) {
           file_path
             = req.files.file.name
             + getTimestamp()
@@ -872,8 +872,13 @@ router.post('/releases/edit/:id', requireLogin, function(req, res, next) {
             title = $4,
             title_romaji = $5,
             version = $6,
-            release_date = $7,
-            file_path = $8,
+            release_date = $7,`;
+
+        if (file_path) {
+          query += 'file_path = $8,';
+        }
+
+        query += `
             revisions = dummy.revisions + 1
           FROM (SELECT * FROM releases WHERE id = $1 FOR UPDATE) dummy
           WHERE releases.id = dummy.id
@@ -886,8 +891,11 @@ router.post('/releases/edit/:id', requireLogin, function(req, res, next) {
           form.title,
           form.title_romaji,
           form.version,
-          form.release_date,
-          file_path ];
+          form.release_date];
+
+        if (file_path) {
+          vars.push(file_path);
+        }
 
         pg_pool.query(query, vars, function(err2, result2) {
           if (err2) {
