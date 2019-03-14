@@ -3,6 +3,9 @@ const router = express.Router();
 
 const bcrypt = require('bcrypt');
 
+const file_upload = require('express-fileupload');
+router.use(file_upload());
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 // *                                                          * // App Init //
@@ -85,6 +88,42 @@ pg_pool.query(query, function(err, result) {
     console.error(err);
   }
 });
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// *                                                         * // SFTP Init //
+const sftp_client = require('ssh2-sftp-client');
+const sftp = new sftp_client();
+
+let sftp_url;
+let sftp_config;
+
+if (process.env.SFTPTOGO_URL) {
+  sftp_url = process.env.SFTPTOGO_URL;
+}
+else {
+  sftp_url = config.sftp.url;
+}
+
+if (sftp_url) {
+  const params = url.parse(sftp_url);
+  const auth = params.auth.split(':');
+
+  sftp_config = {
+    host: params.hostname,
+    port: params.port,
+    username: auth[0],
+    password: auth[1] };
+
+  sftp.connect(sftp_config).then(() => {
+    console.log('Connected to SFTP server.');
+  }).catch((err) => {
+    console.error(err, 'catch error');
+  });
+}
+else {
+  console.error('Couldn\'t connect to SFTP as no config could be loaded.');
+}
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -298,6 +337,7 @@ router.get('/games/:id', function(req, res, next) {
         'title_romaji', releases.title_romaji,
         'version', releases.version,
         'release_date', releases.release_date,
+        'file_path', releases.file_path,
         'status', play_status.status)
           FROM releases
 
@@ -590,6 +630,23 @@ router.post('/releases/new/:game_id', requireLogin, function(req, res, next) {
         form: form });
     }
     else {
+      // Check if there's a file upload
+      let file_path = null;
+
+      if (req.files) {
+        file_path
+          = req.files.file.name
+          + getTimestamp()
+          + '/'
+          + req.files.file.name;
+
+        sftp.put(req.files.file.data, file_path).then((data) => {
+          console.log(data, 'the data info');
+        }).catch((err) => {
+          console.error(err, 'catch error');
+        });
+      }
+
       query = `
         INSERT INTO releases (
           game_id,
@@ -599,9 +656,10 @@ router.post('/releases/new/:game_id', requireLogin, function(req, res, next) {
           title_romaji,
           version,
           release_date,
+          file_path,
           created,
           created_by)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
         RETURNING *;`;
 
       vars = [
@@ -612,6 +670,7 @@ router.post('/releases/new/:game_id', requireLogin, function(req, res, next) {
         form.title_romaji ? form.title_romaji : null,
         form.version,
         form.release_date ? form.release_date : null,
+        file_path,
         getTimestamp(),
         res.locals.user.id ];
 
@@ -636,10 +695,11 @@ router.post('/releases/new/:game_id', requireLogin, function(req, res, next) {
               title_romaji,
               version,
               release_date,
+              file_path,
               message,
               created,
               created_by)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);`;
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12);`;
 
           vars = [
             result.rows[0].id,
@@ -650,6 +710,7 @@ router.post('/releases/new/:game_id', requireLogin, function(req, res, next) {
             form.title_romaji ? form.title_romaji : null,
             form.version,
             form.release_date ? form.release_date : null,
+            file_path,
             '(System) New entry',
             getTimestamp(),
             res.locals.user.id ];
@@ -786,6 +847,23 @@ router.post('/releases/edit/:id', requireLogin, function(req, res, next) {
         });
       }
       else {
+        // Check if there's a file upload
+        let file_path = null;
+
+        if (req.files) {
+          file_path
+            = req.files.file.name
+            + getTimestamp()
+            + '/'
+            + req.files.file.name;
+
+          sftp.put(req.files.file.data, file_path).then((data) => {
+            console.log(data, 'the data info');
+          }).catch((err) => {
+            console.error(err, 'catch error');
+          });
+        }
+
         query = `
           UPDATE releases
           SET
@@ -795,6 +873,7 @@ router.post('/releases/edit/:id', requireLogin, function(req, res, next) {
             title_romaji = $5,
             version = $6,
             release_date = $7,
+            file_path = $8,
             revisions = dummy.revisions + 1
           FROM (SELECT * FROM releases WHERE id = $1 FOR UPDATE) dummy
           WHERE releases.id = dummy.id
@@ -807,7 +886,8 @@ router.post('/releases/edit/:id', requireLogin, function(req, res, next) {
           form.title,
           form.title_romaji,
           form.version,
-          form.release_date ];
+          form.release_date,
+          file_path ];
 
         pg_pool.query(query, vars, function(err2, result2) {
           if (err2) {
@@ -839,10 +919,11 @@ router.post('/releases/edit/:id', requireLogin, function(req, res, next) {
                 title_romaji,
                 version,
                 release_date,
+                file_path,
                 message,
                 created,
                 created_by)
-              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);`;
+              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12);`;
 
             vars = [
               req.params.id,
@@ -865,6 +946,9 @@ router.post('/releases/edit/:id', requireLogin, function(req, res, next) {
 
               form.release_date == result.rows[0].release_date ?
                 null : form.release_date,
+
+              file_path == result.rows[0].file_path ?
+                null : file_path,
 
               form.revision_message,
               getTimestamp(),
@@ -1098,6 +1182,31 @@ router.get('/user/list/:id', function(req, res, next) {
     res.render('user/list', {
       title: 'User#' + req.params.id.toString() + ' - ' + website_name,
       list: result.rows[0] });
+  });
+});
+
+// ----------------------------------------------------------------------- List
+router.get('/file/get/:id', function(req, res, next) {
+  const query = 'SELECT file_path FROM releases WHERE id = $1;';
+  const vars = [ req.params.id ];
+
+  pg_pool.query(query, vars, function(err, result) {
+    if (err) {
+      console.error(err);
+    }
+    else {
+      let filename = result.rows[0].file_path.split('/');
+      filename = filename[filename.length - 1];
+      filename = filename.replace(/[^\x00-\x7F]/g, '_');
+
+      res.setHeader('Content-Type', 'application/zip');
+      res.setHeader('Content-Disposition', 'inline; filename="'
+        + filename + '"');
+
+      sftp.get(result.rows[0].file_path, res).catch((err) => {
+        console.error(err, 'catch error');
+      });
+    }
   });
 });
 

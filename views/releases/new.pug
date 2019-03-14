@@ -77,6 +77,15 @@ block content
 
           tr
             td
+              hr
+
+          tr
+            td
+              label(for='file') Download for this release
+              input#file(type='file' name='file')
+
+          tr
+            td
               center
                 if form.id
                   hr
@@ -92,12 +101,12 @@ block content
       if form.id
         p.message Editing release for #{game.title}
 
-        form(action='/releases/edit/'+form.id.toString() method='post')
+        form(action='/releases/edit/'+form.id.toString() method='post' enctype='multipart/form-data')
           input(type='hidden' name='id' value=form.id)
           +form
 
       else
         p.message Creating release for #{game.title}
 
-        form(action='/releases/new/'+game.id.toString() method='post')
+        form(action='/releases/new/'+game.id.toString() method='post' enctype='multipart/form-data')
           +form

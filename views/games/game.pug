@@ -179,7 +179,8 @@ block content
               td(width='200px') <p>Version</p>
               td <p>Type</p>
               td(width='50%') <p>Title</p>
-              td(width='200px')
+              td(width='50px')
+              td(width='100px')
 
             each r in game.releases
               tr
@@ -213,7 +214,12 @@ block content
                           else
                             | <option value='#{o}'>#{o}</option>
                         | </select>
-                      | <a class='special' href='/releases/edit/#{r.id}'>Edit</a>
+
+                td
+                  p.right
+                    if r.file_path
+                      | <a class='special3' href='/file/get/#{r.id}'>Download</a> |&nbsp;
+                    | <a class='special' href='/releases/edit/#{r.id}'>Edit</a>
 
         p.right <a class='special' href='/releases/new/#{game.id}'>New release</a>
 

@@ -157,6 +157,13 @@ a.special2:hover {
   background: rgba(212,163,253,0.1) !important;
   border-bottom: 1px #d4a3fd solid !important;
 }
+a.special3 {
+  color: #ffc864 !important;
+}
+a.special3:hover {
+  background: rgba(255,200,100,0.1) !important;
+  border-bottom: 1px #ffc864 solid !important;
+}
 a.img:hover {
   border: none;
 }
@@ -212,6 +219,7 @@ td.layout-small2 {
 input[type='text'],
 input[type='password'],
 input[type='number'],
+input[type='file'],
 input[type='submit'],
 textarea {
   padding: 3px;
@@ -224,6 +232,7 @@ textarea {
 input[type='text']:hover,
 input[type='password']:hover,
 input[type='number']:hover,
+input[type='file']:hover,
 input[type='submit']:hover,
 textarea:hover {
   background: linear-gradient(rgba(0,0,0,0.2), rgba(192,128,255,0.1));
