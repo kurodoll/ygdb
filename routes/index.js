@@ -384,10 +384,11 @@ router.get('/games/:id', function(req, res, next) {
     if (err) {
       console.error(err);
     }
-
-    res.render('games/game', {
-      title: result.rows[0].title + ' - ' + website_name,
-      game: result.rows[0] });
+    else {
+      res.render('games/game', {
+        title: result.rows[0].title + ' - ' + website_name,
+        game: result.rows[0] });
+    }
   });
 });
 
