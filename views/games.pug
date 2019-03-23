@@ -25,9 +25,10 @@ block content
   div.content
     table.list
       tr.header
-        td <p>Title</p>
+        td <p>Title <span class='small subdued highlight-bg'># Releases</span></p>
         td <p>Aliases</p>
         td <p>Rating <span class='subdued'>(Bayesian)</span></p>
+        td <p>Average Rating</p>
         td <p># Ratings</p>
 
       each g in games
@@ -37,6 +38,8 @@ block content
               | <a href='/games/#{g.id}'>#{g.title}
               if g.title_romaji
                 | &nbsp;<span class='subdued'>(#{g.title_romaji})</span>
+              if g.n_releases > 0
+                | &nbsp;<span class='small subdued highlight-bg'>#{g.n_releases}</span>
               | </a>
 
           td
@@ -44,6 +47,10 @@ block content
 
           td
             p.rating= g.rating_bayesian
+
+          td
+            if g.rating_average
+              p.rating= parseFloat(g.rating_average.toFixed(2))
 
           td
             p= g.n_ratings

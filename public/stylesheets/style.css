@@ -170,6 +170,9 @@ a.img:hover {
 .monospace {
   font-family: Consolas;
 }
+.small {
+  font-size: 7pt;
+}
 .subdued {
   color: rgba(255,255,255,0.5);
 }
@@ -184,6 +187,11 @@ a.img:hover {
 .message {
   color: #64ff64;
   background: linear-gradient(90deg, rgba(100,255,100,0.1), transparent);
+}
+.highlight-bg {
+  padding: 2px;
+  background: rgba(100,200,255,0.3);
+  border-radius: 5px;
 }
 table {
   width: 100%;

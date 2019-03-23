@@ -66,7 +66,7 @@ pg_pool.on('error', function(err, client) {
 // minimum_votes and global_average are fine as 1 and 5.5 for small pop.
 // Formula is: WR = (v * R + m * C) / (v + m)
 
-query = `
+let query = `
   CREATE OR REPLACE FUNCTION getBayesianRating(
     n_votes        integer,
     rating_average real,
@@ -201,9 +201,17 @@ router.get('/games', function(req, res, next) {
           FROM ratings WHERE games.id = ratings.game_id AND active = TRUE)
             AS rating_bayesian,
 
+      (SELECT AVG(ratings.rating)
+        FROM ratings WHERE games.id = ratings.game_id AND active = TRUE)
+          AS rating_average,
+
       (SELECT COUNT(ratings.rating) AS ratings
         FROM ratings WHERE games.id = ratings.game_id AND active = TRUE)
-          AS n_ratings
+          AS n_ratings,
+
+      (SELECT COUNT(*)
+        FROM releases WHERE games.id = releases.game_id)
+          AS n_releases
 
     FROM games
     ORDER BY rating_bayesian DESC NULLS LAST;`;
