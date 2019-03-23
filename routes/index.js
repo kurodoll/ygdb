@@ -338,7 +338,8 @@ router.get('/games/:id', function(req, res, next) {
             ON releases.id = play_status.release_id
             AND play_status.user_id = $2
 
-          WHERE game_id = $1)
+          WHERE game_id = $1
+          ORDER BY releases.release_date DESC NULLS LAST)
             AS releases,
 
       array(SELECT rating FROM ratings WHERE game_id = $1 AND active = TRUE)
