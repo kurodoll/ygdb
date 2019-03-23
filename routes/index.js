@@ -93,7 +93,6 @@ pg_pool.query(query, function(err, result) {
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 // *                                                         * // SFTP Init //
 const sftp_client = require('ssh2-sftp-client');
-const sftp = new sftp_client();
 
 let sftp_url;
 let sftp_config;
@@ -114,12 +113,6 @@ if (sftp_url) {
     port: params.port,
     username: auth[0],
     password: auth[1] };
-
-  sftp.connect(sftp_config).then(() => {
-    console.log('Connected to SFTP server.');
-  }).catch((err) => {
-    console.error(err, 'catch error');
-  });
 }
 else {
   console.error('Couldn\'t connect to SFTP as no config could be loaded.');
@@ -641,10 +634,16 @@ router.post('/releases/new/:game_id', requireLogin, function(req, res, next) {
           + '/'
           + req.files.file.name;
 
-        sftp.put(req.files.file.data, file_path).then((data) => {
-          console.log(data, 'the data info');
-        }).catch((err) => {
-          console.error(err, 'catch error');
+        const sftp = new sftp_client();
+
+        sftp.connect(sftp_config).then(() => {
+          sftp.put(req.files.file.data, file_path).then((data) => {
+            console.log(data, 'the data info');
+            sftp.end();
+          }).catch((err) => {
+            console.error(err, 'catch error');
+            sftp.end();
+          });
         });
       }
 
@@ -858,10 +857,14 @@ router.post('/releases/edit/:id', requireLogin, function(req, res, next) {
             + '/'
             + req.files.file.name;
 
-          sftp.put(req.files.file.data, file_path).then((data) => {
-            console.log(data, 'the data info');
-          }).catch((err) => {
-            console.error(err, 'catch error');
+          sftp.connect(sftp_config).then(() => {
+            sftp.put(req.files.file.data, file_path).then((data) => {
+              console.log(data, 'the data info');
+              sftp.end();
+            }).catch((err) => {
+              console.error(err, 'catch error');
+              sftp.end();
+            });
           });
         }
 
@@ -1212,7 +1215,14 @@ router.get('/file/get/:id', function(req, res, next) {
       res.setHeader('Content-Disposition', 'inline; filename="'
         + filename + '"');
 
-      sftp.get(result.rows[0].file_path, res).catch((err) => {
+      const sftp = new sftp_client();
+
+      sftp.connect(sftp_config).then(() => {
+        sftp.get(result.rows[0].file_path, res).then(() => {
+          sftp.end();
+        });
+      }).catch((err) => {
+        sftp.end();
         console.error(err, 'catch error');
       });
     }
