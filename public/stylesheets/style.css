@@ -210,8 +210,12 @@ table.list tr:nth-child(even) {
 table.list tr td p a {
   color: #fff;
 }
+tr.header {
+  background: linear-gradient(transparent, rgba(100,200,255,0.2));
+}
 tr.header td p {
-  font-weight: bold;
+  font-style: italic;
+  color: rgba(255,255,255,0.8);
 }
 tr.item:hover {
   background: rgba(100,200,255,0.1) !important;
