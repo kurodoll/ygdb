@@ -32,7 +32,7 @@ block content
         td <p># Ratings</p>
 
       each g in games
-        tr
+        tr.item(onclick='window.location.href="/games/' + g.id + '";')
           td
             p
               | <a href='/games/#{g.id}'>#{g.title}
