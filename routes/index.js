@@ -982,7 +982,7 @@ router.post('/releases/edit/:id', requireLogin, function(req, res, next) {
                 console.error(err3);
               }
 
-              res.redirect('/games/' + req.params.game_id.toString());
+              res.redirect('/releases/' + req.params.id.toString());
             });
           }
         });
