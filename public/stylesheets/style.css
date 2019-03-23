@@ -164,6 +164,13 @@ a.special3:hover {
   background: rgba(255,200,100,0.1) !important;
   border-bottom: 1px #ffc864 solid !important;
 }
+a.special4 {
+  color: #ff6464 !important;
+}
+a.special4:hover {
+  background: rgba(255,100,100,0.1) !important;
+  border-bottom: 1px #ff6464 solid !important;
+}
 a.img:hover {
   border: none;
 }
