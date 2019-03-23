@@ -866,6 +866,8 @@ router.post('/releases/edit/:id', requireLogin, function(req, res, next) {
             + '/'
             + req.files.file.name;
 
+          const sftp = new sftp_client();
+
           sftp.connect(sftp_config).then(() => {
             sftp.put(req.files.file.data, file_path).then((data) => {
               console.log(data, 'the data info');
