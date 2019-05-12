@@ -152,18 +152,26 @@ block content
               colour  = 'rgb(150,255,150)';
               colour2 = 'rgba(150,255,150,.2)';
             }
+            else if (text == 'Visual Novel') {
+              colour  = 'rgb(150,255,255)';
+              colour2 = 'rgba(150,255,255,.2)';
+            }
+            else {
+              colour  = 'rgb(255,255,255)';
+              colour2 = 'rgba(255,255,255,.2)';
+            }
 
             $(this).css('padding-left',  '5px');
             $(this).css('padding-right', '5px');
             $(this).css('border-left',   '2px ' + colour + 'solid');
-            $(this).css('background',    colour2);
+            $(this).css('background',    'linear-gradient(90deg, ' + colour2 + ', transparent)');
             $(this).css('color',         colour);
           }
           else if (type == 'genre') {
             $(this).css('padding-left',  '5px');
             $(this).css('padding-right', '5px');
             $(this).css('border-left',   '2px rgb(100,200,255) solid');
-            $(this).css('background',    'rgba(100,200,255,.2)');
+            $(this).css('background',    'linear-gradient(90deg, rgb(100,200,255,.2), transparent)');
           }
         }
       });
