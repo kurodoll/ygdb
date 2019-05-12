@@ -215,7 +215,9 @@ router.get('/games', function(req, res, next) {
           AS n_releases
 
     FROM games
-    ORDER BY rating_bayesian DESC NULLS LAST;`;
+    ORDER BY rating_bayesian DESC NULLS LAST,
+             games.aliases   ASC,
+             games.title     ASC;`;
 
   pg_pool.query(query, function(err, result) {
     if (err) {
