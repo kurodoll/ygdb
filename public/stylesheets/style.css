@@ -242,6 +242,12 @@ td.layout-large2 {
 td.layout-small2 {
   width: 30%;
 }
+td.tag-list {
+  display: inline-block;
+  width: 350px;
+  overflow: hidden;
+  white-space: nowrap;
+}
 input[type='text'],
 input[type='password'],
 input[type='number'],

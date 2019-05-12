@@ -69,6 +69,12 @@ block content
             $(this).css('background',    'rgba(100,200,255,.2)');
           }
         }
+        else {
+          $(this).css('padding-left',  '5px');
+          $(this).css('padding-right', '5px');
+          $(this).css('border-left',   '2px rgb(128,128,128) solid');
+          $(this).css('background',    'rgba(128,128,128,.2)');
+        }
       });
     });
 
@@ -89,7 +95,7 @@ block content
           td
             p.subdued= g.creator
 
-          td
+          td(width='500px')
             p
               | <a href='/games/#{g.id}'>#{g.title}
               if g.title_romaji
@@ -101,7 +107,7 @@ block content
           td
             p <span class='subdued'>#{g.aliases}</span>
 
-          td
+          td.tag-list
             if g.tags
               each t in g.tags.split(',')
                 p.tag.same-line= t
