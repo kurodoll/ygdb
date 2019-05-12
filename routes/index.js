@@ -98,8 +98,8 @@ const sftp_client = require('ssh2-sftp-client');
 let sftp_url;
 let sftp_config;
 
-if (process.env.SFTPTOGO_URL) {
-  sftp_url = process.env.SFTPTOGO_URL;
+if (process.env.SFTP_URL) {
+  sftp_url = process.env.SFTP_URL;
 }
 else if (config) {
   sftp_url = config.sftp.url;
@@ -657,7 +657,13 @@ router.post('/releases/new/:game_id', requireLogin, function(req, res, next) {
         const sftp = new sftp_client();
 
         sftp.connect(sftp_config).then(() => {
-          sftp.put(req.files.file.data, file_path).then((data) => {
+          let full_path
+            = '/home/storage/ygdb-files/'
+            + file_path;
+
+          full_path = full_path.replace(/:/g, '_');
+
+          sftp.put(req.files.file.data, full_path).then((data) => {
             console.log(data, 'the data info');
             sftp.end();
           }).catch((err) => {
@@ -880,7 +886,13 @@ router.post('/releases/edit/:id', requireLogin, function(req, res, next) {
           const sftp = new sftp_client();
 
           sftp.connect(sftp_config).then(() => {
-            sftp.put(req.files.file.data, file_path).then((data) => {
+            let full_path
+              = '/home/storage/ygdb-files/'
+              + file_path;
+
+            full_path = full_path.replace(/:/g, '_');
+
+            sftp.put(req.files.file.data, full_path).then((data) => {
               console.log(data, 'the data info');
               sftp.end();
             }).catch((err) => {
@@ -1240,7 +1252,13 @@ router.get('/file/get/:id', function(req, res, next) {
       const sftp = new sftp_client();
 
       sftp.connect(sftp_config).then(() => {
-        sftp.get(result.rows[0].file_path, res).then(() => {
+        let full_path
+          = '/home/storage/ygdb-files/'
+          + result.rows[0].file_path;
+
+        full_path = full_path.replace(/:/g, '_');
+
+        sftp.get(full_path, res).then(() => {
           sftp.end();
         });
       }).catch((err) => {
