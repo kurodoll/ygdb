@@ -93,24 +93,27 @@ block content
       each g in games
         tr.item(onclick='window.location.href="/games/' + g.id + '";')
           td
-            p.subdued= g.creator
+            div.games-creator.no-overflow
+              p.subdued= g.creator
 
-          td(width='500px')
-            p
-              | <a href='/games/#{g.id}'>#{g.title}
-              if g.title_romaji
-                | &nbsp;<span class='subdued'>(#{g.title_romaji})</span>
-              if g.n_releases > 0
-                | &nbsp;<span class='small subdued highlight-bg'>#{g.n_releases}</span>
-              | </a>
+          td
+            div.games-title.no-overflow
+              p
+                | <a href='/games/#{g.id}'>#{g.title}
+                if g.title_romaji
+                  | &nbsp;<span class='subdued'>(#{g.title_romaji})</span>
+                if g.n_releases > 0
+                  | &nbsp;<span class='small subdued highlight-bg'>#{g.n_releases}</span>
+                | </a>
 
           td
             p <span class='subdued'>#{g.aliases}</span>
 
-          td.tag-list
-            if g.tags
-              each t in g.tags.split(',')
-                p.tag.same-line= t
+          td
+            div.games-tag-list.no-overflow
+              if g.tags
+                each t in g.tags.split(',')
+                  p.tag.same-line= t
 
           td
             p.rating= g.rating_bayesian

@@ -242,11 +242,18 @@ td.layout-large2 {
 td.layout-small2 {
   width: 30%;
 }
-td.tag-list {
-  display: inline-block;
-  width: 350px;
+div.no-overflow {
   overflow: hidden;
   white-space: nowrap;
+}
+div.games-creator {
+  width: 200px;
+}
+div.games-title {
+  width: 500px;
+}
+div.games-tag-list {
+  width: 350px;
 }
 input[type='text'],
 input[type='password'],
