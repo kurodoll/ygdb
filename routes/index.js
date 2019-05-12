@@ -11,6 +11,7 @@ router.use(file_upload());
 // *                                                          * // App Init //
 const website_name = 'Yasei';
 
+let config;
 try {
   config = require('../config');
 }
@@ -100,7 +101,7 @@ let sftp_config;
 if (process.env.SFTPTOGO_URL) {
   sftp_url = process.env.SFTPTOGO_URL;
 }
-else {
+else if (config) {
   sftp_url = config.sftp.url;
 }
 
