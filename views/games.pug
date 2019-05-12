@@ -31,7 +31,7 @@ block content
             let colour;
             let colour2;
 
-            if (text == 'RPG Maker') {
+            if (text == 'RPG Maker' || text == 'RPG') {
               colour  = 'rgb(255,100,100)';
               colour2 = 'rgba(255,100,100,.2)';
             }
@@ -51,6 +51,14 @@ block content
               colour  = 'rgb(150,255,255)';
               colour2 = 'rgba(150,255,255,.2)';
             }
+            else if (text == 'Puzzle') {
+              colour  = 'rgb(100,150,255)';
+              colour2 = 'rgba(100,150,255,.2)';
+            }
+            else if (text == 'Platformer') {
+              colour  = 'rgb(200,150,255)';
+              colour2 = 'rgba(200,150,255,.2)';
+            }
             else {
               colour  = 'rgb(255,255,255)';
               colour2 = 'rgba(255,255,255,.2)';
@@ -69,10 +77,7 @@ block content
             $(this).css('background',    'rgba(100,200,255,.2)');
           }
           else if (type == 'meta') {
-            $(this).css('padding-left',  '5px');
-            $(this).css('padding-right', '5px');
-            $(this).css('border-left',   '2px rgb(255,100,200) solid');
-            $(this).css('background',    'rgba(255,100,200,.2)');
+            $(this).css('font-style', 'italic');
           }
         }
         else {
