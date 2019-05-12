@@ -68,6 +68,7 @@ block content
   div.content
     table.list
       tr.header
+        td <p>Creator</p>
         td <p>Title <span class='small subdued highlight-bg'># Releases</span></p>
         td <p>Aliases</p>
         td <p>Tags</p>
@@ -77,6 +78,9 @@ block content
 
       each g in games
         tr.item(onclick='window.location.href="/games/' + g.id + '";')
+          td
+            p.subdued= g.creator
+
           td
             p
               | <a href='/games/#{g.id}'>#{g.title}
