@@ -47,6 +47,17 @@ block content
 
           tr
             td
+              label(for='tags') Tags
+              input#tags(
+                type='text'
+                name='tags'
+                value=form.tags
+                placeholder='type:Visual Novel,genre:Horror,High School'
+                maxlength='500'
+                autocomplete='off' )
+
+          tr
+            td
               hr
 
           tr

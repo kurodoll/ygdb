@@ -255,12 +255,13 @@ router.post('/games/new', requireLogin, function(req, res, next) {
         title_romaji,
         aliases,
         description,
+        tags,
         creator,
         screenshots,
         links,
         created,
         created_by)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
       RETURNING *;`;
 
     let vars = [
@@ -268,6 +269,7 @@ router.post('/games/new', requireLogin, function(req, res, next) {
       form.title_romaji,
       form.aliases,
       form.description,
+      form.tags,
       form.creator,
       form.screenshots,
       form.links,
@@ -292,13 +294,14 @@ router.post('/games/new', requireLogin, function(req, res, next) {
             title_romaji,
             aliases,
             description,
+            tags,
             creator,
             screenshots,
             links,
             message,
             created,
             created_by)
-          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12);`;
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13);`;
 
         vars = [
           result.rows[0].id,
@@ -307,6 +310,7 @@ router.post('/games/new', requireLogin, function(req, res, next) {
           form.title_romaji,
           form.aliases,
           form.description,
+          form.tags,
           form.creator,
           form.screenshots,
           form.links,
@@ -449,9 +453,10 @@ router.post('/games/edit/:id', requireLogin, function(req, res, next) {
             title_romaji = $3,
             aliases = $4,
             description = $5,
-            creator = $6,
-            screenshots = $7,
-            links = $8,
+            tags = $6,
+            creator = $7,
+            screenshots = $8,
+            links = $9,
             revisions = dummy.revisions + 1
           FROM (SELECT * FROM games WHERE id = $1 FOR UPDATE) dummy
           WHERE games.id = dummy.id
@@ -463,6 +468,7 @@ router.post('/games/edit/:id', requireLogin, function(req, res, next) {
           form.title_romaji,
           form.aliases,
           form.description,
+          form.tags,
           form.creator,
           form.screenshots,
           form.links ];
@@ -485,38 +491,42 @@ router.post('/games/edit/:id', requireLogin, function(req, res, next) {
                 title_romaji,
                 aliases,
                 description,
+                tags,
                 creator,
                 screenshots,
                 links,
                 message,
                 created,
                 created_by)
-              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12);`;
+              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13);`;
 
             vars = [
               req.params.id,
               result.rows[0].revisions + 1,
 
               form.title == result.rows[0].title ?
-                null : form.title,
+                null : (form.title ? form.title : null),
 
               form.title_romaji == result.rows[0].title_romaji ?
-                null : form.title_romaji,
+                null : (form.title_romaji ? form.title_romaji : null),
 
               form.aliases == result.rows[0].aliases ?
-                null : form.aliases,
+                null : (form.aliases ? form.aliases : null),
 
               form.description == result.rows[0].description ?
-                null : form.description,
+                null : (form.description ? form.description : null),
+
+              form.tags == result.rows[0].tags ?
+                null : (form.tags ? form.tags : null),
 
               form.creator == result.rows[0].creator ?
-                null : form.creator,
+                null : (form.creator ? form.creator : null),
 
               form.screenshots == result.rows[0].screenshots ?
-                null : form.screenshots,
+                null : (form.screenshots ? form.screenshots : null),
 
               form.links == result.rows[0].links ?
-                null : form.links,
+                null : (form.links ? form.links : null),
 
               form.revision_message,
               getTimestamp(),

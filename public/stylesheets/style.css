@@ -126,6 +126,9 @@ p.logo-sub {
   bottom: 8px;
   font: 9pt Graduate;
 }
+p.same-line {
+  display: inline;
+}
 pre {
   white-space: pre-wrap;
   word-wrap: break-all;

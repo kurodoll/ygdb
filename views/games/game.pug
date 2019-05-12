@@ -124,6 +124,41 @@ block content
           data: $(this).parent().parent().serialize()
         });
       });
+
+      // Make tags look better
+      $('.tag').each(function(i, obj) {
+        if ($(this).text().indexOf(':') > -1) {
+          const type = $(this).text().split(':')[0];
+          const text = $(this).text().split(':')[1];
+          $(this).text(text);
+
+          if (type == 'type') {
+            let colour;
+            let colour2;
+
+            if (text == 'RPG Maker') {
+              colour  = 'rgb(255,100,100)';
+              colour2 = 'rgba(255,100,100,.2)';
+            }
+            else if (text == 'STG') {
+              colour  = 'rgb(255,150,100)';
+              colour2 = 'rgba(255,150,100,.2)';
+            }
+
+            $(this).css('padding-left',  '5px');
+            $(this).css('padding-right', '5px');
+            $(this).css('border-left',   '2px ' + colour + 'solid');
+            $(this).css('background',    colour2);
+            $(this).css('color',         colour);
+          }
+          else if (type == 'genre') {
+            $(this).css('padding-left',  '5px');
+            $(this).css('padding-right', '5px');
+            $(this).css('border-left',   '2px rgb(100,200,255) solid');
+            $(this).css('background',    'rgba(100,200,255,.2)');
+          }
+        }
+      });
     });
 
 
@@ -158,6 +193,13 @@ block content
                   tr
                     td <p class='subdued'>Creator</p>
                     td <p>#{game.creator}</p>
+
+                  tr
+                    td <p class='subdued'>Tags</p>
+                    td
+                      if game.tags
+                        each t in game.tags.split(',')
+                          p.tag= t
 
                   tr
                     td <p class='subdued'>Links</p>

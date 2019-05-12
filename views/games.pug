@@ -19,6 +19,41 @@ block content
       $('.rating').each(function(i, obj) {
         $(this).css('color', rainbow_full[Math.round($(this).text()) - 1]);
       });
+
+      // Make tags look better
+      $('.tag').each(function(i, obj) {
+        if ($(this).text().indexOf(':') > -1) {
+          const type = $(this).text().split(':')[0];
+          const text = $(this).text().split(':')[1];
+          $(this).text(text);
+
+          if (type == 'type') {
+            let colour;
+            let colour2;
+
+            if (text == 'RPG Maker') {
+              colour  = 'rgb(255,100,100)';
+              colour2 = 'rgba(255,100,100,.2)';
+            }
+            else if (text == 'STG') {
+              colour  = 'rgb(255,150,100)';
+              colour2 = 'rgba(255,150,100,.2)';
+            }
+
+            $(this).css('padding-left',  '5px');
+            $(this).css('padding-right', '5px');
+            $(this).css('border-left',   '2px ' + colour + 'solid');
+            $(this).css('background',    colour2);
+            $(this).css('color',         colour);
+          }
+          else if (type == 'genre') {
+            $(this).css('padding-left',  '5px');
+            $(this).css('padding-right', '5px');
+            $(this).css('border-left',   '2px rgb(100,200,255) solid');
+            $(this).css('background',    'rgba(100,200,255,.2)');
+          }
+        }
+      });
     });
 
 
@@ -27,6 +62,7 @@ block content
       tr.header
         td <p>Title <span class='small subdued highlight-bg'># Releases</span></p>
         td <p>Aliases</p>
+        td <p>Tags</p>
         td <p>Rating <span class='subdued'>(Bayesian)</span></p>
         td <p>Average Rating</p>
         td <p># Ratings</p>
@@ -44,6 +80,11 @@ block content
 
           td
             p <span class='subdued'>#{g.aliases}</span>
+
+          td
+            if g.tags
+              each t in g.tags.split(',')
+                p.tag.same-line= t
 
           td
             p.rating= g.rating_bayesian
