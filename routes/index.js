@@ -259,11 +259,12 @@ router.post('/games/new', requireLogin, function(req, res, next) {
         description,
         tags,
         creator,
+        circle,
         screenshots,
         links,
         created,
         created_by)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
       RETURNING *;`;
 
     let vars = [
@@ -273,6 +274,7 @@ router.post('/games/new', requireLogin, function(req, res, next) {
       form.description,
       form.tags,
       form.creator,
+      form.circle,
       form.screenshots,
       form.links,
       getTimestamp(),
@@ -298,12 +300,14 @@ router.post('/games/new', requireLogin, function(req, res, next) {
             description,
             tags,
             creator,
+            circle,
             screenshots,
             links,
             message,
             created,
             created_by)
-          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13);`;
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13,
+            $14);`;
 
         vars = [
           result.rows[0].id,
@@ -314,6 +318,7 @@ router.post('/games/new', requireLogin, function(req, res, next) {
           form.description,
           form.tags,
           form.creator,
+          form.circle,
           form.screenshots,
           form.links,
           '(System) New entry',
@@ -457,8 +462,9 @@ router.post('/games/edit/:id', requireLogin, function(req, res, next) {
             description = $5,
             tags = $6,
             creator = $7,
-            screenshots = $8,
-            links = $9,
+            circle = $8,
+            screenshots = $9,
+            links = $10,
             revisions = dummy.revisions + 1
           FROM (SELECT * FROM games WHERE id = $1 FOR UPDATE) dummy
           WHERE games.id = dummy.id
@@ -472,6 +478,7 @@ router.post('/games/edit/:id', requireLogin, function(req, res, next) {
           form.description,
           form.tags,
           form.creator,
+          form.circle,
           form.screenshots,
           form.links ];
 
@@ -495,12 +502,14 @@ router.post('/games/edit/:id', requireLogin, function(req, res, next) {
                 description,
                 tags,
                 creator,
+                circle,
                 screenshots,
                 links,
                 message,
                 created,
                 created_by)
-              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13);`;
+              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13,
+                $14);`;
 
             vars = [
               req.params.id,
@@ -523,6 +532,9 @@ router.post('/games/edit/:id', requireLogin, function(req, res, next) {
 
               form.creator == result.rows[0].creator ?
                 null : (form.creator ? form.creator : null),
+
+              form.circle == result.rows[0].circle ?
+                null : (form.circle ? form.circle : null),
 
               form.screenshots == result.rows[0].screenshots ?
                 null : (form.screenshots ? form.screenshots : null),
