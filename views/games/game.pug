@@ -164,16 +164,20 @@ block content
               colour  = 'rgb(200,150,255)';
               colour2 = 'rgba(200,150,255,.2)';
             }
+            else if (text == 'Yume Nikki-Like') {
+              colour  = 'rgb(255,150,200)';
+              colour2 = 'rgba(255,150,200,.2)';
+            }
             else {
               colour  = 'rgb(255,255,255)';
               colour2 = 'rgba(255,255,255,.2)';
             }
 
-            $(this).css('padding-left',  '5px');
-            $(this).css('padding-right', '5px');
-            $(this).css('border-left',   '2px ' + colour + 'solid');
-            $(this).css('background',    colour2);
-            $(this).css('color',         colour);
+            $(this).css('padding-left',   '5px');
+            $(this).css('padding-right',  '5px');
+            $(this).css('border-left',    '2px ' + colour + 'solid');
+            $(this).css('background',     colour2);
+            $(this).css('color',          colour);
           }
           else if (type == 'genre') {
             $(this).css('padding-left',  '5px');
@@ -182,7 +186,10 @@ block content
             $(this).css('background',    'rgba(100,200,255,.2)');
           }
           else if (type == 'meta') {
-            $(this).css('font-style', 'italic');
+            $(this).css('padding-left',  '5px');
+            $(this).css('padding-right', '5px');
+            $(this).css('border-left',   '2px rgb(0,0,0) solid');
+            $(this).css('background',    'rgb(0,0,0)');
           }
         }
         else {
