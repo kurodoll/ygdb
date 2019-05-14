@@ -188,7 +188,6 @@ block content
           else if (type == 'meta') {
             $(this).css('padding-left',  '5px');
             $(this).css('padding-right', '5px');
-            $(this).css('border-left',   '2px rgb(0,0,0) solid');
             $(this).css('background',    'rgb(0,0,0)');
           }
         }
@@ -265,6 +264,7 @@ block content
               td <p>Version</p>
               td <p>Type</p>
               td <p>Title</p>
+              td <p>Notes</p>
               td
               td
 
@@ -286,6 +286,9 @@ block content
                     if r.title_romaji
                       | &nbsp;<span class='subdued'>(#{r.title_romaji})</span>
                     | </a>
+
+                td
+                  p.notes= r.notes
 
                 td
                   form
