@@ -264,7 +264,7 @@ block content
               td <p>Version</p>
               td <p>Type</p>
               td <p>Title</p>
-              td <p>Notes</p>
+              td <p>Notes <span class='subdued'>(hover to view)</p>
               td
               td
 
@@ -307,6 +307,8 @@ block content
 
                 td
                   p.right
+                    if r.info_link
+                      | <a class='special2' href='#{r.info_link}'>More Info</a> <span class='subdued'>|</span>&nbsp;
                     if r.file_path
                       | <a class='special4' href='/file/get/#{r.id}'>Download</a> <span class='subdued'>|</span>&nbsp;
                     | <a class='special' href='/releases/edit/#{r.id}'>Edit</a>

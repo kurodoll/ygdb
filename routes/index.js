@@ -352,6 +352,7 @@ router.get('/games/:id', function(req, res, next) {
         'release_date', releases.release_date,
         'file_path', releases.file_path,
         'notes', releases.notes,
+        'info_link', releases.info_link,
         'status', play_status.status)
           FROM releases
 
@@ -704,10 +705,11 @@ router.post('/releases/new/:game_id', requireLogin, function(req, res, next) {
           version,
           release_date,
           notes,
+          info_link,
           file_path,
           created,
           created_by)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
         RETURNING *;`;
 
       vars = [
@@ -719,6 +721,7 @@ router.post('/releases/new/:game_id', requireLogin, function(req, res, next) {
         form.version,
         form.release_date,
         form.notes,
+        form.info_link,
         file_path,
         getTimestamp(),
         res.locals.user.id ];
@@ -745,11 +748,13 @@ router.post('/releases/new/:game_id', requireLogin, function(req, res, next) {
               version,
               release_date,
               notes,
+              info_link,
               file_path,
               message,
               created,
               created_by)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13);`;
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13,
+              $14);`;
 
           vars = [
             result.rows[0].id,
@@ -761,6 +766,7 @@ router.post('/releases/new/:game_id', requireLogin, function(req, res, next) {
             form.version,
             form.release_date,
             form.notes,
+            form.info_link,
             file_path,
             '(System) New entry',
             getTimestamp(),
@@ -942,7 +948,8 @@ router.post('/releases/edit/:id', requireLogin, function(req, res, next) {
             title_romaji = $5,
             version = $6,
             release_date = $7,
-            notes = $8,`;
+            notes = $8,
+            info_link = $9,`;
 
         if (file_path) {
           query += 'file_path = $9,';
@@ -962,7 +969,8 @@ router.post('/releases/edit/:id', requireLogin, function(req, res, next) {
           form.title_romaji,
           form.version,
           form.release_date,
-          form.notes];
+          form.notes,
+          form.info_link];
 
         if (file_path) {
           vars.push(file_path);
@@ -999,11 +1007,13 @@ router.post('/releases/edit/:id', requireLogin, function(req, res, next) {
                 version,
                 release_date,
                 notes,
+                info_link,
                 file_path,
                 message,
                 created,
                 created_by)
-              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13);`;
+              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13,
+                $14);`;
 
             vars = [
               req.params.id,
@@ -1029,6 +1039,9 @@ router.post('/releases/edit/:id', requireLogin, function(req, res, next) {
 
               form.notes == result.rows[0].notes ?
                 null : form.notes,
+
+              form.info_link == result.rows[0].info_link ?
+                null : form.info_link,
 
               file_path == result.rows[0].file_path ?
                 null : file_path,
