@@ -39,7 +39,6 @@ block content
     table.list
       tr.header
         td <p>Release Date</p>
-        td <p>Region</p>
         td <p>Version</p>
         td <p>Type</p>
         td <p>Title</p>
@@ -55,8 +54,16 @@ block content
             else
               p.subdued Unknown
 
-          td <p>#{r.region}</p>
-          td <p>#{r.version}</p>
+          td
+            p
+              if r.region == 'JP'
+                img.flag.flag-jp(src='/images/flags/blank.gif')
+              else if r.region == 'EN'
+                img.flag.flag-gb(src='/images/flags/blank.gif')
+              else if r.region == 'FR'
+                img.flag.flag-fr(src='/images/flags/blank.gif')
+              | &nbsp; #{r.version}
+
           td <p>#{r.type}</p>
 
           td
