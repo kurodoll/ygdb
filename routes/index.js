@@ -664,10 +664,16 @@ router.post('/releases/new/:game_id', requireLogin, function(req, res, next) {
             + file_path;
 
           full_path = full_path.replace(/:/g, '_');
+          directory = full_path.slice(0, -req.files.file.name.length);
 
-          sftp.put(req.files.file.data, full_path).then((data) => {
-            console.log(data, 'the data info');
-            sftp.end();
+          sftp.mkdir(directory, true).then(() => {
+            sftp.put(req.files.file.data, full_path).then((data) => {
+              console.log(data, 'the data info');
+              sftp.end();
+            }).catch((err) => {
+              console.error(err, 'catch error');
+              sftp.end();
+            });
           }).catch((err) => {
             console.error(err, 'catch error');
             sftp.end();
@@ -893,10 +899,16 @@ router.post('/releases/edit/:id', requireLogin, function(req, res, next) {
               + file_path;
 
             full_path = full_path.replace(/:/g, '_');
+            directory = full_path.slice(0, -req.files.file.name.length);
 
-            sftp.put(req.files.file.data, full_path).then((data) => {
-              console.log(data, 'the data info');
-              sftp.end();
+            sftp.mkdir(directory, true).then(() => {
+              sftp.put(req.files.file.data, full_path).then((data) => {
+                console.log(data, 'the data info');
+                sftp.end();
+              }).catch((err) => {
+                console.error(err, 'catch error');
+                sftp.end();
+              });
             }).catch((err) => {
               console.error(err, 'catch error');
               sftp.end();
