@@ -79,10 +79,24 @@ div.game-info {
   padding: 10px;
   background: rgba(0,0,0,0.3);
 }
+div.release-notes {
+  width: 300px;
+}
 div.dark {
   padding-bottom: 2px;
   padding-left: 10px;
   background: rgba(0,0,0,0.3);
+}
+div.no-overflow {
+  overflow: hidden;
+  white-space: nowrap;
+}
+div.no-overflow:hover {
+  overflow: visible;
+  white-space: normal;
+}
+div.no-overflow:hover p {
+  color: #fff;
 }
 h1 {
   margin: 0;
@@ -125,6 +139,9 @@ p.logo-sub {
   padding-left: 198px;
   bottom: 8px;
   font: 9pt Graduate;
+}
+p.notes {
+  color: rgba(255,255,255,0.5);
 }
 p.same-line {
   display: inline;
@@ -224,6 +241,13 @@ tr.item:hover {
   background: rgba(100,200,255,0.1) !important;
   cursor: pointer;
 }
+tr.item:hover div.games-tag-list {
+  position: absolute;
+  background: #000;
+}
+tr.item:hover div.games-tag-list p {
+  display: block;
+}
 td {
   vertical-align: top;
 }
@@ -241,10 +265,6 @@ td.layout-large2 {
 }
 td.layout-small2 {
   width: 30%;
-}
-div.no-overflow {
-  overflow: hidden;
-  white-space: nowrap;
 }
 div.games-creator {
   width: 200px;
